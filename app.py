@@ -1,6 +1,15 @@
-from flask import Flask
+import psycopg2
+from flask import Flask, render_template
+
 from config import Config
 import db
+from routes.pedidos import bp as pedidos_bp
+from routes.clientes import bp as clientes_bp
+from routes.productos import bp as productos_bp
+from routes.vendedores import bp as vendedores_bp
+from routes.insumos import bp as insumos_bp
+from routes.configuracion import bp as configuracion_bp
+
 
 def create_app():
     app = Flask(__name__)
