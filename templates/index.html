@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "macros.html" as m %}
 {% block title %}Inicio{% endblock %}
 {% block content %}
 <h1 class="h3 mb-1">Panel principal de la cafetería <code>admin_cafeteria_db</code></h1>
@@ -41,6 +42,8 @@
                 <td class="fw-medium">{{ pedidos.vendedor.nombre }}</td>
                 <td class="num">{{ pedidos.total|pesos }}</td>
                 </tr>
+                {% else %}
+                 {{ m.sin_registros(4) }}
                 {% endfor %}
             </tbody>
             </table>
