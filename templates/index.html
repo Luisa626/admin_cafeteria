@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+<h1 class="h3 mb-1">Panel principal de la cafetería <code>admin_cafeteria_db</code></h1>
+<p class="text-secondary mb-4">Selecciona una tabla para consultar, crear, editar o eliminar registros.</p>
+
+{% set tarjetas = [
+  ('Ventas del Día',   'cash', r.ventas_del_dia, 'pesos'),
+  ('Vendas Totales', 'cash-stack', r.total_ventas, 'pesos'),
+  ('Pedidos Totales',     'receipt', r.pedidos_totales, 'pedidos'),
+] %}
+<main>
+<div class="row g-3 mb-4">
+  {% for label, icon, n, extra in tarjetas %}
+  <div class="col-6 col-md-4 col-lg">
+      <div class="card card-tabla {{ extra }} h-100">
+        <div class="card-body">
+          <div class="text-secondary"><i class="bi bi-{{ icon }}"></i> {{ label }}</div>
+          <div class="numero">{{ n }}</div>
+          <div class="small text-secondary">registros</div>
+        </div>
+      </div>
+  </div>
+  {% endfor %}
+</div>
+<div class="row g-4">
+    <section class="col-12 col-md-8">
+        <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                <th>#Pedido</th><th>Cliente</th><th>Vendedor</th><th class="text-end">Total</th><th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedidos in items %}
+                <tr>
+                <td>{{ pedidos.id_pedido }}</td>
+                <td class="fw-medium">{{ pedidos.cliente.nombre }}</td>
+                <td class="fw-medium">{{ pedidos.vendedor.nombre }}</td>
+                <td class="num">{{ pedidos.total|pesos }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+        </div>
+    </section>
+    <aside class="col-12 col-md-4">
+    {% set tarjeta_top = [
+    ('Top productos',   'trophy', top.top_productos, 'pesos'),
+    ] %}
+    <div class="row g-3">
+    {% for label, icon, n, extra in tarjeta_top %}
+        <div class="col-6 col-md-4 col-lg">
+        <div class="card card-tabla {{ extra }} h-100">
+            <div class="card-body">
+            <div class="text-secondary"><i class="bi bi-{{ icon }}"></i> {{ label }}</div>
+            <div class="numero">{{ n }}</div>
+            <div class="small text-secondary">Mas vendidos</div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+    </aside>
+</div>
+</main>
+{% endblock %}
+
