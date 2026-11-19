@@ -33,16 +33,20 @@
             <table class="table table-hover align-middle mb-0">
             <thead>
                 <tr>
-                <th>#Pedido</th><th>Cliente</th><th>Vendedor</th><th class="text-end">Total</th><th></th>
+                <th>#Pedido</th><th>Cliente</th><th>Vendedor</th><th>Total</th><th></th>
                 </tr>
             </thead>
             <tbody>
-                {% for pedidos in items %}
+                {% for pedidos in pedidos %}
                 <tr>
                 <td>{{ pedidos.id_pedido }}</td>
-                <td class="fw-medium">{{ pedidos.cliente.nombre }}</td>
-                <td class="fw-medium">{{ pedidos.vendedor.nombre }}</td>
+                <td class="fw-medium">{{ pedidos.cliente }}</td>
+                <td class="fw-medium">{{ pedidos.vendedor }}</td>
                 <td class="num">{{ pedidos.total|pesos }}</td>
+                <td>
+                    <a href="{{ url_for('pedidos.ver', id_pedido=pedidos.id_pedido) }}"
+                        class="btn btn-sm btn-outline-secondary">Ver</a>
+                </td>   
                 </tr>
                 {% else %}
                  {{ m.sin_registros(4) }}
