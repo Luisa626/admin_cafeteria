@@ -51,21 +51,17 @@
         </div>
     </section>
     <aside class="col-12 col-md-4">
-    {% set tarjeta_top = [
-    ('Top productos',   'trophy', top.top_productos, 'pesos'),
-    ] %}
-    <div class="row g-3">
-    {% for label, icon, n, extra in tarjeta_top %}
-        <div class="col-6 col-md-4 col-lg">
-        <div class="card card-tabla {{ extra }} h-100">
+<div class="row g-3">
+    <div class="col-6 col-md-4 col-lg">
+        <div class="card card-tabla h-100">
             <div class="card-body">
-            <div class="text-secondary"><i class="bi bi-{{ icon }}"></i> {{ label }}</div>
-            <div class="numero">{{ n }}</div>
-            <div class="small text-secondary">Mas vendidos</div>
+                <div class="text-secondary"><i class="bi bi-trophy"></i> Top productos</div>
+                <div class="numero">{{ top.top_productos }}</div>
+                <div class="small text-secondary">Mas vendidos</div>
             </div>
         </div>
     </div>
-    {% endfor %}
+</div>
     </div>
     </aside>
 </div>
