@@ -57,8 +57,6 @@ def create_app():
                 FROM pedidos p
                 JOIN detalle_pedidos d ON d.id_pedido = p.id_pedido
                 JOIN productos pr      ON pr.id_producto = d.id_producto
-                WHERE p.fecha_compra >= CURRENT_DATE
-                AND p.fecha_compra <  CURRENT_DATE + 1
                 GROUP BY pr.id_producto, pr.nombre_producto
                 ORDER BY unidades_vendidas DESC
                 LIMIT 3
