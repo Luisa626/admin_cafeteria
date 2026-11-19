@@ -3,6 +3,7 @@
 {% block title %}Clientes{% endblock %}
 {% block content %}
 {{ m.encabezado('Clientes', 'people', url_for('clientes.crear'), items|length) }}
+
 {% set tarjetas = [
   ('Nuevos este mes',       'person-plus', sc.nuevos_mes, 'clientes'),
   ('Cliente más frecuente', 'star',        sc.cliente_frecuente or '—', 'clientes'),
