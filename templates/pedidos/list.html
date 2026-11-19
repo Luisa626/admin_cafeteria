@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block content %}
+
+{{ m.encabezado('Pedidos', 'bag-check', url_for('pedidos.nuevo'), items|length) }}
+
+{% set tarjetas = [
+  ('Pedidos de hoy',   'bag-check', pedidos_recientes.total_pedidos),
+  ('Ventas del día', 'cash-coin', ventas_del_dia.ventas_del_dia | pesos),
+  ('Ventas totales',     'cash-stack', ventas_totales.ventas_totales | pesos),
+] %}
+<main>
+<div class="row g-3 mb-4">
+  {% for label, icon, n in tarjetas %}
+  <div class="col-6 col-md-4 col-lg">
+      <div class="card card-tabla {{ extra }} h-100">
+        <div class="card-body">
+          <div class="text-secondary"><i class="bi bi-{{ icon }}"></i> {{ label }}</div>
+          <div class="numero">{{ n }}</div>
+          <div class="small text-secondary">registros</div>
+        </div>
+      </div>
+  </div>
+  {% endfor %}  
+</div>
+
+<div class="row g-4">
+    <div class="card">
+        <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+         <tr>
+            <th>Pedido</th><th>Fecha</th><th>Cliente</th><th>Vendedor</th>
+            <th class="num">Total</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in items %}
+            <tr>
+                <td class="fw-medium">{{ p.id_pedido }}</td>
+                <td>{{ p.fecha_compra.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ p.cliente }}</td>
+                <td>{{ p.vendedor }}</td>
+                <td class="num">{{ p.total | pesos }}</td>
+                <td>
+                <a href="{{ url_for('pedidos.detalle', id_pedido=p.id_pedido) }}"
+                    class="btn btn-sm btn-outline-secondary">Productos</a>
+                {{ m.acciones(url_for('pedidos.editar', id=p.id_pedido),
+                                url_for('pedidos.eliminar', id=p.id_pedido),
+                                'el pedido ' ~ p.id_pedido) }}
+                </td>
+            </tr>
+            {% else %}
+                {{ m.sin_registros(6) }}
+            {% endfor %}
+      </tbody>
+    </table>
+  </div>   <!-- table-responsive -->
+</div>     <!-- card -->
+</div>     <!-- row g-4 -->
+</main>
+{% endblock %}
+

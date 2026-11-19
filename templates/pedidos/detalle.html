@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-1">{{ titulo }}</h1>
+<p class="text-secondary">
+  Cliente: <strong>{{ pedido.cliente }}</strong> ·
+  Vendedor: <strong>{{ pedido.vendedor }}</strong> ·
+  {{ pedido.fecha_compra.strftime('%d/%m/%Y %H:%M') }}
+</p>
+
+<div class="card mb-4">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th class="text-end">Cantidad</th>
+          <th class="text-end">Precio unitario</th>
+          <th class="text-end">Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in lineas %}
+        <tr>
+          <td>{{ l.nombre_producto }}</td>
+          <td class="text-end">{{ l.cantidad }}</td>
+          <td class="text-end">{{ l.precio_unitario | pesos }}</td>
+          <td class="text-end">{{ l.subtotal | pesos }}</td>
+          <td class="text-end">
+            <form method="post"
+                  action="{{ url_for('pedidos.quitar', id_pedido=pedido.id_pedido, id_detalle=l.id_detalle) }}">
+              <button class="btn btn-sm btn-outline-secondary">Quitar</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted py-3">Aún no hay productos</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card mb-4"><div class="card-body">
+  <form method="post" action="{{ url_for('pedidos.agregar', id_pedido=pedido.id_pedido) }}"
+        class="row g-3 align-items-end">
+    <div class="col-md-5">
+      <label for="id_producto" class="form-label">Producto</label>
+      <select class="form-select" id="id_producto" name="id_producto" required>
+        <option value="">Elige un producto...</option>
+        {% for p in productos %}
+          <option value="{{ p.id_producto }}">{{ p.nombre_producto }} · {{ p.precio_venta | pesos }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="cantidad" class="form-label">Cantidad</label>
+      <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" value="1" required>
+    </div>
+    <div class="col-md-4">
+      <button type="submit" class="btn btn-outline-secondary w-100">Agregar producto</button>
+    </div>
+  </form>
+</div></div>
+
+<div class="d-flex justify-content-end align-items-center gap-3">
+  <strong>Total {{ total | pesos }}</strong>
+
+  {% if not lineas %}
+    <form method="post" action="{{ url_for('pedidos.eliminar', id=pedido.id_pedido) }}">
+      <button class="btn btn-outline-danger">Cancelar pedido</button>
+    </form>
+  {% else %}
+    <a href="{{ url_for('pedidos.listar') }}" class="btn btn-dark">Terminar pedido</a>
+  {% endif %}
+</div>
+{% endblock %}

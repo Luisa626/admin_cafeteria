@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card mb-4"><div class="card-body">
+  <form method="post" novalidate>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="id_cliente" class="form-label">Cliente *</label>
+        <select class="form-select" id="id_cliente" name="id_cliente" required>
+          <option value="">Elige un cliente...</option>
+          {% for c in clientes %}
+            <option value="{{ c.id_cliente }}"
+              {{ 'selected' if item.id_cliente|string == c.id_cliente|string }}>
+              {{ c.nombre_cliente }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="id_vendedor" class="form-label">Vendedor *</label>
+        <select class="form-select" id="id_vendedor" name="id_vendedor" required>
+          <option value="">Elige un vendedor...</option>
+          {% for c in vendedores %}
+            <option value="{{ c.id_vendedor }}"
+              {{ 'selected' if item.id_vendedor|string == c.id_vendedor|string }}>
+              {{ c.nombre_vendedor }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    {{ m.botones_form(url_for('pedidos.listar')) }}
+  </form>
+</div></div>
+{% endblock %}
