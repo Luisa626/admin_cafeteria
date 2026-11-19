@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block title %}Clientes{% endblock %}
+{% block content %}
+{{ m.encabezado('Clientes', 'people', url_for('clientes.crear'), items|length) }}
+<div class="card card-tabla mb-4">
+  <div class="card-body p-0">
+    <div class="row g-0">
+      <div class="col-6 p-3 border-end">
+        <div class="numero">{{ sc.nuevos_mes }}</div>
+        <div class="small text-secondary">Nuevos este mes</div>
+      </div>
+      <div class="col-6 p-3">
+        <div class="numero">{{ sc.cliente_frecuente or '—' }}</div>
+        <div class="small text-secondary">Cliente más frecuente</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>ID</th><th>Documento</th><th>Cliente</th><th>Teléfono</th><th>Email</th>
+          <th>Registro</th><th class="num">Pedidos</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in items %}
+        <tr>
+          <td>{{ c.id_cliente }}</td>
+          <td><span class="badge text-bg-secondary">{{ c.sigla }}</span> {{ c.documento }}</td>
+          <td class="fw-medium">{{ c.nombre_cliente }} {{ c.apellido_cliente }}</td>
+          <td>{{ c.telefono or '' }}</td>
+          <td>{% if c.email %}<a href="mailto:{{ c.email }}">{{ c.email }}</a>{% endif %}</td>
+          <td>{{ c.fecha_registro.strftime('%d/%m/%Y') if c.fecha_registro else '' }}</td>
+          <td class="num">{{ c.num_pedidos }}</td>
+          <td>{{ m.acciones(url_for('clientes.editar', id=c.id_cliente),
+                            url_for('clientes.eliminar', id=c.id_cliente),
+                            'el cliente ' ~ c.nombre_cliente ~ ' ' ~ c.apellido_cliente) }}</td>
+        </tr>
+        {% else %}
+          {{ m.sin_registros(8) }}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

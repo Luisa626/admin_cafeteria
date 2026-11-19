@@ -40,6 +40,7 @@ def create_app():
                         AND p.fecha_compra <  CURRENT_DATE + 1) AS ventas_del_dia
         """, one=True)
 
+        
         pedidos_recientes = db.query("""
             SELECT p.id_pedido AS pedido, p.id_cliente, p.id_vendedor, COALESCE(SUM(d.cantidad * 
                     d.precio_unitario), 0) AS total
@@ -62,7 +63,19 @@ def create_app():
                 ORDER BY unidades_vendidas DESC
                 LIMIT 3
         """)
-        return render_template("index.html", r=resumen, pedidos=pedidos_recientes, top=top_productos)
+
+        stats_clientes = db.query("""
+            SELECT (SELECT COUNT(*) FROM clientes
+                     WHERE date_trunc('month', fecha_registro)
+                         = date_trunc('month', CURRENT_DATE)) AS nuevos_mes,
+                   (SELECT cl.nombre_cliente || ' ' || cl.apellido_cliente
+                      FROM pedidos p
+                      JOIN clientes cl ON cl.id_cliente = p.id_cliente
+                     GROUP BY cl.id_cliente
+                     ORDER BY COUNT(*) DESC, cl.id_cliente
+                     LIMIT 1) AS cliente_frecuente
+        """, one=True)
+        return render_template("index.html", r=resumen, pedidos=pedidos_recientes, top=top_productos, sc=stats_clientes)
 
     @app.errorhandler(psycopg2.OperationalError)
     def error_conexion(exc):
