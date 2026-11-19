@@ -4,6 +4,7 @@ from flask import Blueprint, abort, flash, redirect, render_template, request, u
 import validators as v
 from db import DatabaseError, error_message, execute, query
 
+
 bp = Blueprint("clientes", __name__, url_prefix="/clientes")
 
 INT_MAX = 2147483647  # límite de un INTEGER en PostgreSQL
@@ -18,7 +19,7 @@ def _tipos_documento():
 def _entero(form, campo, etiqueta, errores, minimo=1, maximo=INT_MAX):
     """Lee un entero obligatorio del formulario; devuelve None si es inválido."""
     valor = (form.get(campo) or "").strip()
-    if not valor:
+    if not valor: 
         errores.append(f"{etiqueta} es obligatorio.")
         return None
     try:
@@ -147,3 +148,4 @@ def eliminar(id):
     except DatabaseError as exc:
         flash(error_message(exc), "danger")
     return redirect(url_for(".listar"))
+
