@@ -80,8 +80,8 @@ def crear():
         datos, errores = _leer_formulario(request.form)
         if not errores:
             try:
-                execute("""INSERT INTO vendedores (id_tipo_documento, nombre_vendedor, apellido_vendedor, telefono, email)
-                           VALUES (%(id_tipo_documento)s, %(nombre_vendedor)s, %(apellido_vendedor)s, %(telefono)s, %(email)s)""",
+                execute("""INSERT INTO vendedores (id_tipo_documento, documento, nombre_vendedor, apellido_vendedor, telefono, email)
+                           VALUES (%(id_tipo_documento)s, %(documento)s, %(nombre_vendedor)s, %(apellido_vendedor)s, %(telefono)s, %(email)s)""",
                         datos)
                 flash("Vendedor creado correctamente.", "success")
                 return redirect(url_for(".listar"))
