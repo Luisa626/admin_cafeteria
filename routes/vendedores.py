@@ -10,7 +10,7 @@ INT_MAX = 2147483647  # límite de un INTEGER en PostgreSQL
 def _leer_formulario(form):
     errores = []
     datos = {
-        "id_tipo_documento": v.texto(form, "id_tipo_documento", "Tipo de documento", errores, minimo=1),
+        "id_tipo_documento": v.entero(form, "id_tipo_documento", "Tipo de documento", errores, minimo=1),
         "documento": v.texto(form, "documento", "Documento", errores, max_len=20),
         "nombre_vendedor": v.texto(form, "nombre_vendedor", "Nombre", errores, max_len=100),
         "apellido_vendedor": v.texto(form, "apellido_vendedor", "Apellido", errores, max_len=100),
