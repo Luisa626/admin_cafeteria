@@ -11,12 +11,12 @@
 
 <body class="bg-body-tertiary">
 {% set menu = [
-  ('Pedidos',    'cart-check'),
-  ('Productos',  'basket'),
-  ('Clientes',   'people'),
-  ('Vendedores', 'person-badge'),
-  ('Insumos',     'box-seam'),
-  ('Configuración', 'gear'),
+  ('pedidos.listar', 'Pedidos',    'cart-check'),
+  ('productos.listar', 'Productos',  'basket'),
+  ('clientes.listar', 'Clientes',   'people'),
+  ('vendedores.listar', 'Vendedores', 'person-badge'),
+  ('insumos.listar', 'Insumos',     'box-seam'),
+  ('configuracion.listar', 'Configuración', 'gear'),
 ] %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark app-navbar">
   <div class="container">
@@ -29,10 +29,11 @@
     </button>
     <div class="collapse navbar-collapse" id="nav">
       <ul class="navbar-nav ms-auto">
-        {% for label, icon in menu %}
+        {% for endpoint, label, icon in menu %}
           <li class="nav-item">
-              <i class="bi bi-{{ icon }}"></i> {{ label }}
-            </a>
+              <a class="nav-link" href="{{ url_for(endpoint) }}">
+                <i class="bi bi-{{ icon }}"></i> {{ label }}
+              </a>
           </li>
         {% endfor %}
       </ul>
