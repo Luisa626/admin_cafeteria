@@ -10,7 +10,7 @@ bp = Blueprint("insumos", __name__, url_prefix="/insumos")
 
 STOCK_MAX = Decimal("99999999.99")  # límite de numeric(10,2)
 
-UNIDADES = ["kg", "lb", "gramos", "ml", "litros"]
+UNIDADES = ["kg", "lb", "g", "mL", "L", "und"]
 
 def _leer_formulario(form):
     errores = []

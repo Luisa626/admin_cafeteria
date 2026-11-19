@@ -12,14 +12,13 @@
     <table class="table table-hover align-middle mb-0">
         <thead>
          <tr>
-            <th>Insumo</th><th>unidad</th><th>estado</th>
+            <th>Insumo</th><th>unidad</th>
             <th class="num">Stock</th><th></th>
             </tr>
         </thead>
         <tbody>
             {% for i in items %}
             <tr>
-                <td>{{ i.id_insumo }}</td>
                 <td class="fw-medium">{{ i.nombre_insumo }}</td>
                 <td><span class="badge text-bg-light border">{{ i.unidad_medida }}</span></td>
                 <td class="num">{{ i.stock_actual|int }}</td>
