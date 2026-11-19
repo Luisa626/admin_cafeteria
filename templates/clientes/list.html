@@ -34,7 +34,7 @@
         {% for c in items %}
         <tr>
           <td>{{ c.id_cliente }}</td>
-          <td><span class="badge text-bg-secondary">{{ c.sigla }}</span> {{ c.documento }}</td>
+          <td>{{ c.sigla }} {{ c.documento }}</td>
           <td class="fw-medium">{{ c.nombre_cliente }} {{ c.apellido_cliente }}</td>
           <td>{{ c.telefono or '' }}</td>
           <td>{% if c.email %}<a href="mailto:{{ c.email }}">{{ c.email }}</a>{% endif %}</td>
