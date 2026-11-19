@@ -67,8 +67,6 @@ def listar():
                            ventas_del_dia=ventas_del_dia,
                            ventas_totales=ventas_totales)
 
-
-# ---------- PASO 1: crear el pedido (cliente + vendedor) ----------
 @bp.route("/nuevo", methods=["GET", "POST"])
 def nuevo():
     item = {}
@@ -89,8 +87,6 @@ def nuevo():
             flash(e, "danger")
     return _render_form(item, "Nuevo pedido")
 
-
-# ---------- PASO 2: detalle (agregar productos) ----------
 @bp.route("/<int:id_pedido>")
 def detalle(id_pedido):
     pedido = query("""
