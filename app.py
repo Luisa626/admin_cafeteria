@@ -42,15 +42,19 @@ def create_app():
 
         
         pedidos_recientes = db.query("""
-            SELECT p.id_pedido AS pedido, p.id_cliente, p.id_vendedor, COALESCE(SUM(d.cantidad * 
-                    d.precio_unitario), 0) AS total
-                    FROM pedidos p
-                    JOIN detalle_pedidos d ON d.id_pedido = p.id_pedido
-                    WHERE p.fecha_compra >= CURRENT_DATE
-                    AND p.fecha_compra <  CURRENT_DATE + 1
-                    GROUP BY p.id_pedido, p.id_cliente, p.id_vendedor
-                    ORDER BY p.id_pedido DESC
-        """)
+            SELECT p.id_pedido, p.fecha_compra,
+                c.nombre_cliente AS cliente,
+                v.nombre_vendedor AS vendedor,
+                COALESCE(SUM(d.cantidad * d.precio_unitario), 0) AS total
+            FROM pedidos p
+            JOIN clientes c   ON c.id_cliente = p.id_cliente
+            JOIN vendedores v ON v.id_vendedor = p.id_vendedor
+            LEFT JOIN detalle_pedidos d ON d.id_pedido = p.id_pedido
+            WHERE p.fecha_compra >= CURRENT_DATE
+            AND p.fecha_compra <  CURRENT_DATE + 1
+            GROUP BY p.id_pedido, c.id_cliente, v.id_vendedor
+            ORDER BY p.id_pedido DESC
+                """)
 
         top_productos = db.query("""
             SELECT pr.nombre_producto, SUM(d.cantidad) AS unidades_vendidas
@@ -62,18 +66,7 @@ def create_app():
                 LIMIT 3
         """)
 
-        stats_clientes = db.query("""
-            SELECT (SELECT COUNT(*) FROM clientes
-                     WHERE date_trunc('month', fecha_registro)
-                         = date_trunc('month', CURRENT_DATE)) AS nuevos_mes,
-                   (SELECT cl.nombre_cliente || ' ' || cl.apellido_cliente
-                      FROM pedidos p
-                      JOIN clientes cl ON cl.id_cliente = p.id_cliente
-                     GROUP BY cl.id_cliente
-                     ORDER BY COUNT(*) DESC, cl.id_cliente
-                     LIMIT 1) AS cliente_frecuente
-        """, one=True)
-        return render_template("index.html", r=resumen, pedidos=pedidos_recientes, top=top_productos, sc=stats_clientes)
+        return render_template("index.html", r=resumen, pedidos=pedidos_recientes, top=top_productos)
 
     @app.errorhandler(psycopg2.OperationalError)
     def error_conexion(exc):
