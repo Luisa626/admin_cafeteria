@@ -19,7 +19,6 @@
         <tbody>
             {% for pr in items %}
             <tr>
-                <td>{{ pr.id_producto }}</td>
                 <td class="fw-medium">{{ pr.nombre_producto }}</td>
                 <td><span class="badge text-bg-light border">{{ pr.nombre_categoria }}</span></td>
                 <td class="num">{{ pr.precio_venta|pesos }}</td>
