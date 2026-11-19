@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <form method="POST" novalidate>
+      <div class="mb-3">
+        <label for="nombre_categoria" class="form-label">Nombre de la categoría <span class="text-danger">*</span></label>
+        <input type="text"
+               class="form-control"
+               id="nombre_categoria"
+               name="nombre_categoria"
+               maxlength="50"
+               placeholder="Ej: Bebidas Calientes, Panadería"
+               value="{{ item.nombre_categoria if item else '' }}"
+               required>
+      </div>
+
+            {{ m.botones_form(url_for('configuracion.listar')) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

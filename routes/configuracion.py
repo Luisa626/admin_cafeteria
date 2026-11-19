@@ -1,5 +1,4 @@
-"""Configuración: catálogos tipo_documento y categorias (agregar y editar en el mismo panel)."""
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 
 import validators as v
 from db import DatabaseError, error_message, execute, query
@@ -7,162 +6,180 @@ from db import DatabaseError, error_message, execute, query
 bp = Blueprint("configuracion", __name__, url_prefix="/configuracion")
 
 
-def _mostrar_errores(errores):
-    for e in errores:
-        flash(e, "danger")
-
-
-# ======================================================================
-# PÁGINA PRINCIPAL
-# ======================================================================
+# 1. LISTAR
 @bp.route("/")
-def index():
-    # Tipos de documento + cuántos clientes y vendedores los usan
-    tipos = query("""
-        SELECT td.*,
-               (SELECT COUNT(*) FROM clientes c   WHERE c.id_tipo_documento = td.id_tipo_documento)
-             + (SELECT COUNT(*) FROM vendedores v WHERE v.id_tipo_documento = td.id_tipo_documento)
-               AS en_uso
-          FROM tipo_documento td
-         ORDER BY td.id_tipo_documento
+def listar():
+    items = query("""
+        SELECT td.id_tipo_documento AS id_configuracion,
+               td.sigla,
+               td.descripcion,
+               COUNT(c.id_cliente) AS usado_por
+        FROM tipo_documento td
+        LEFT JOIN clientes c ON c.id_tipo_documento = td.id_tipo_documento
+        GROUP BY td.id_tipo_documento, td.sigla, td.descripcion
+        ORDER BY td.sigla
     """)
 
-    # Categorías + cuántos productos tiene cada una
     categorias = query("""
-        SELECT ca.*, COUNT(p.id_producto) AS num_productos
-          FROM categorias ca
-          LEFT JOIN productos p ON p.id_categoria = ca.id_categoria
-         GROUP BY ca.id_categoria
-         ORDER BY ca.id_categoria
+        SELECT ct.id_categoria,
+               ct.nombre_categoria,
+               COUNT(p.id_producto) AS num_productos
+        FROM categorias ct
+        LEFT JOIN productos p ON p.id_categoria = ct.id_categoria
+        GROUP BY ct.id_categoria, ct.nombre_categoria
+        ORDER BY ct.nombre_categoria
     """)
 
-    # ¿Hay algún registro en modo edición? (?editar_tipo=3 / ?editar_categoria=2)
-    tipo_editar = None
-    id_tipo = request.args.get("editar_tipo", type=int)
-    if id_tipo:
-        tipo_editar = query("SELECT * FROM tipo_documento WHERE id_tipo_documento = %s",
-                            (id_tipo,), one=True)
-
-    categoria_editar = None
-    id_cat = request.args.get("editar_categoria", type=int)
-    if id_cat:
-        categoria_editar = query("SELECT * FROM categorias WHERE id_categoria = %s",
-                                 (id_cat,), one=True)
-
-    return render_template("configuracion/index.html",
-                           tipos=tipos, categorias=categorias,
-                           tipo_editar=tipo_editar, categoria_editar=categoria_editar)
+    return render_template("configuracion/list.html", items=items, categorias=categorias)
 
 
-# ======================================================================
-# TIPOS DE DOCUMENTO
-# ======================================================================
-def _leer_tipo(form):
-    errores = []
-    datos = {
-        "sigla": v.texto(form, "sigla", "Sigla", errores, max_len=5),
-        "descripcion": v.texto(form, "descripcion", "Descripción", errores, max_len=50),
-    }
-    return datos, errores
+# --- RUTAS PARA CATEGORÍA (/configuracion/categoria/...) ---
 
-
-@bp.route("/tipos/nuevo", methods=["POST"])
-def tipo_crear():
-    datos, errores = _leer_tipo(request.form)
-    if not errores:
-        try:
-            execute("""INSERT INTO tipo_documento (sigla, descripcion)
-                       VALUES (%(sigla)s, %(descripcion)s)""", datos)
-            flash("Tipo de documento creado.", "success")
-        except DatabaseError as exc:
-            errores.append(error_message(exc))
-    _mostrar_errores(errores)
-    return redirect(url_for(".index", _anchor="tipos"))
-
-
-@bp.route("/tipos/<int:id>/editar", methods=["POST"])
-def tipo_actualizar(id):
-    datos, errores = _leer_tipo(request.form)
-    if not errores:
-        try:
-            if execute("""UPDATE tipo_documento
-                             SET sigla = %(sigla)s, descripcion = %(descripcion)s
-                           WHERE id_tipo_documento = %(id)s""",
-                       {**datos, "id": id}):
-                flash("Tipo de documento actualizado.", "success")
-            else:
-                flash("El tipo de documento no existe.", "warning")
-            return redirect(url_for(".index", _anchor="tipos"))   # sale del modo edición
-        except DatabaseError as exc:
-            errores.append(error_message(exc))
-    _mostrar_errores(errores)
-    # Hubo errores: se queda en modo edición
-    return redirect(url_for(".index", editar_tipo=id, _anchor="tipos"))
-
-
-@bp.route("/tipos/<int:id>/eliminar", methods=["POST"])
-def tipo_eliminar(id):
-    try:
-        if execute("DELETE FROM tipo_documento WHERE id_tipo_documento = %s", (id,)):
-            flash("Tipo de documento eliminado.", "success")
-        else:
-            flash("El tipo de documento no existe.", "warning")
-    except DatabaseError as exc:
-        flash(error_message(exc), "danger")
-    return redirect(url_for(".index", _anchor="tipos"))
-
-
-# ======================================================================
-# CATEGORÍAS
-# ======================================================================
-def _leer_categoria(form):
-    errores = []
-    datos = {
-        "nombre_categoria": v.texto(form, "nombre_categoria", "Categoría", errores, max_len=50),
-    }
-    return datos, errores
-
-
-@bp.route("/categorias/nueva", methods=["POST"])
+@bp.route("/categoria/", methods=["GET", "POST"])
+@bp.route("/categoria/crear", methods=["GET", "POST"])
 def categoria_crear():
-    datos, errores = _leer_categoria(request.form)
-    if not errores:
+    if request.method == "POST":
+        nombre = request.form.get("nombre_categoria", "").strip()
+
+        if not nombre:
+            flash("El nombre de la categoría es obligatorio.", "warning")
+            return render_template("configuracion/categoria_form.html", item=request.form)
+
         try:
-            execute("""INSERT INTO categorias (nombre_categoria)
-                       VALUES (%(nombre_categoria)s)""", datos)
-            flash("Categoría creada.", "success")
-        except DatabaseError as exc:
-            errores.append(error_message(exc))
-    _mostrar_errores(errores)
-    return redirect(url_for(".index", _anchor="categorias"))
+            execute(
+                "INSERT INTO categoria (nombre_categoria) VALUES (%s)",
+                (nombre,),
+            )
+            flash("Categoría creada correctamente.", "success")
+            return redirect(url_for("configuracion.listar"))
+        except DatabaseError as e:
+            flash(error_message(e), "danger")
+            return render_template("configuracion/categoria_form.html", item=request.form)
+
+    return render_template("configuracion/categoria_form.html", item=None)
 
 
-@bp.route("/categorias/<int:id>/editar", methods=["POST"])
-def categoria_actualizar(id):
-    datos, errores = _leer_categoria(request.form)
-    if not errores:
+@bp.route("/categoria/editar/<int:id>", methods=["GET", "POST"])
+def categoria_editar(id):
+    rows = query(
+        "SELECT id_categoria, nombre_categoria FROM categoria WHERE id_categoria = %s",
+        (id,),
+    )
+    if not rows:
+        abort(404)
+    item = rows[0]
+
+    if request.method == "POST":
+        nombre = request.form.get("nombre_categoria", "").strip()
+
+        if not nombre:
+            flash("El nombre de la categoría es obligatorio.", "warning")
+            return render_template("configuracion/categoria_form.html", item=item)
+
         try:
-            if execute("""UPDATE categorias
-                             SET nombre_categoria = %(nombre_categoria)s
-                           WHERE id_categoria = %(id)s""",
-                       {**datos, "id": id}):
-                flash("Categoría actualizada.", "success")
-            else:
-                flash("La categoría no existe.", "warning")
-            return redirect(url_for(".index", _anchor="categorias"))
-        except DatabaseError as exc:
-            errores.append(error_message(exc))
-    _mostrar_errores(errores)
-    return redirect(url_for(".index", editar_categoria=id, _anchor="categorias"))
+            execute(
+                "UPDATE categoria SET nombre_categoria = %s WHERE id_categoria = %s",
+                (nombre, id),
+            )
+            flash("Categoría actualizada correctamente.", "success")
+            return redirect(url_for("configuracion.listar"))
+        except DatabaseError as e:
+            flash(error_message(e), "danger")
+
+    return render_template("configuracion/categoria_form.html", item=item)
 
 
-@bp.route("/categorias/<int:id>/eliminar", methods=["POST"])
+@bp.route("/categoria/eliminar/<int:id>", methods=["POST"])
 def categoria_eliminar(id):
     try:
-        if execute("DELETE FROM categorias WHERE id_categoria = %s", (id,)):
-            flash("Categoría eliminada.", "success")
-        else:
-            flash("La categoría no existe.", "warning")
-    except DatabaseError as exc:
-        flash(error_message(exc), "danger")
-    return redirect(url_for(".index", _anchor="categorias"))
+        execute("DELETE FROM categoria WHERE id_categoria = %s", (id,))
+        flash("Categoría eliminada.", "success")
+    except DatabaseError as e:
+        flash(error_message(e), "danger")
+
+    return redirect(url_for("configuracion.listar"))
+
+
+# 2. CREAR
+@bp.route("/nuevo", methods=["GET", "POST"])
+def nuevo():
+    if request.method == "POST":
+        sigla = request.form.get("sigla", "").strip().upper()
+        descripcion = request.form.get("descripcion", "").strip()
+
+        if not sigla or not descripcion:
+            flash("La sigla y la descripción son obligatorias.", "warning")
+            return render_template("configuracion/form.html", item=request.form)
+
+        if len(sigla) > 5:
+            flash("La sigla no puede tener más de 5 caracteres.", "warning")
+            return render_template("configuracion/form.html", item=request.form)
+
+        if len(descripcion) > 50:
+            flash("La descripción no puede tener más de 50 caracteres.", "warning")
+            return render_template("configuracion/form.html", item=request.form)
+
+        try:
+            execute(
+                "INSERT INTO tipo_documento (sigla, descripcion) VALUES (%s, %s)",
+                (sigla, descripcion),
+            )
+            flash("Tipo de documento creado correctamente.", "success")
+            return redirect(url_for("configuracion.listar"))
+        except DatabaseError as e:
+            flash(error_message(e), "danger")
+            return render_template("configuracion/form.html", item=request.form)
+
+    return render_template("configuracion/form.html", item=None)
+
+
+# 3. EDITAR
+@bp.route("/editar/<int:id>", methods=["GET", "POST"])
+def editar(id):
+    rows = query(
+        """
+        SELECT id_tipo_documento AS id_configuracion, sigla, descripcion
+        FROM tipo_documento
+        WHERE id_tipo_documento = %s
+        """,
+        (id,),
+    )
+    if not rows:
+        abort(404)
+    item = rows[0]
+
+    if request.method == "POST":
+        sigla = request.form.get("sigla", "").strip().upper()
+        descripcion = request.form.get("descripcion", "").strip()
+
+        if not sigla or not descripcion:
+            flash("La sigla y la descripción son obligatorias.", "warning")
+            return render_template("configuracion/form.html", item=item)
+
+        if len(sigla) > 5 or len(descripcion) > 50:
+            flash("La sigla (máx. 5) o descripción (máx. 50) excede el límite.", "warning")
+            return render_template("configuracion/form.html", item=item)
+
+        try:
+            execute(
+                "UPDATE tipo_documento SET sigla = %s, descripcion = %s WHERE id_tipo_documento = %s",
+                (sigla, descripcion, id),
+            )
+            flash("Tipo de documento actualizado correctamente.", "success")
+            return redirect(url_for("configuracion.listar"))
+        except DatabaseError as e:
+            flash(error_message(e), "danger")
+
+    return render_template("configuracion/form.html", item=item)
+
+
+# 4. ELIMINAR
+@bp.route("/eliminar/<int:id>", methods=["POST"])
+def eliminar(id):
+    try:
+        execute("DELETE FROM tipo_documento WHERE id_tipo_documento = %s", (id,))
+        flash("Tipo de documento eliminado.", "success")
+    except DatabaseError as e:
+        flash(error_message(e), "danger")
+
+    return redirect(url_for("configuracion.listar"))

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block title %}Configuracion{% endblock %}
+{% block content %}
+{{ m.encabezado('Configuracion', 'gear', url_for('configuracion.nuevo'), items|length) }}
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <div class="card-header bg-white pt-3">
+         <h5 class="mb-0">TIPO DE DOCUMENTOS</h5>
+          <th>Sigla</th>
+          <th>Descripción</th>
+          <th class="num">Usado por</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cf in items %}
+        <tr>
+          <td>{{ cf.sigla }}</td>
+          <td>{{ cf.descripcion }}</td>
+          <td>{{cf.usado_por}}</td>
+          <td>{{ m.acciones(url_for('configuracion.editar', id=cf.id_configuracion),
+                            url_for('configuracion.eliminar', id=cf.id_configuracion),
+                            'el tipo de documento ' ~ cf.sigla) }}</td>
+        </tr>
+        {% else %}
+          {{ m.sin_registros(4) }}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PANEL 2: CATEGORÍA -->
+ <div class="d-flex justify-content-end mt-2">
+ <a href="{{ url_for('configuracion.categoria_crear') }}" class="btn btn-personalizado"><i class="bi bi-plus-lg"></i> Nuevo
+      </div>
+<div class="card">
+  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">CATEGORIA</h5>
+    </a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Categoria</th>
+          <th class="num">Productos</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ct in categorias %}
+        <tr>
+          <td>{{ ct.nombre_categoria }}</td>
+          <td class="num">{{ ct.num_productos }}</td>
+          <td>{{ m.acciones(url_for('configuracion.categoria_editar', id=ct.id_categoria),
+                            url_for('configuracion.categoria_eliminar', id=ct.id_categoria),
+                            'la categoría ' ~ ct.nombre_categoria) }}</td>
+        </tr>
+        {% else %}
+          {{ m.sin_registros(3) }}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
