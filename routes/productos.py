@@ -48,8 +48,8 @@ def crear():
         datos, errores = _leer_formulario(request.form)
         if not errores:
             try:
-                execute("""INSERT INTO productos (nombre_producto, id_categoria, precio_venta, stock)
-                           VALUES (%(nombre_producto)s, %(id_categoria)s, %(precio_venta)s, %(stock)s)""",
+                execute("""INSERT INTO productos (nombre_producto, id_categoria, precio_venta)
+                           VALUES (%(nombre_producto)s, %(id_categoria)s, %(precio_venta)s)""",
                         datos)
                 flash("Producto creado correctamente.", "success")
                 return redirect(url_for(".listar"))
