@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block title %}Vendedores{% endblock %}
+{% block content %}
+{{ m.encabezado('Vendedores', 'person-badge', url_for('vendedores.crear'), items|length) }}
+
+{% set tarjetas = [
+  ('Pedidos atendidos hoy',   'bag-check', pedidos_hoy.pedidos_hoy),
+  ('Más pedidos hoy', 'star', pedidos_atendidos.pedidos_atendidos),
+] %}
+<main>
+<div class="row g-3 mb-4">
+  {% for label, icon, n in tarjetas %}
+  <div class="col-6 col-md-4 col-lg">
+      <div class="card card-tabla {{ extra }} h-100">
+        <div class="card-body">
+          <div class="text-secondary"><i class="bi bi-{{ icon }}"></i> {{ label }}</div>
+          <div class="numero">{{ n }}</div>
+          <div class="small text-secondary">registros</div>
+        </div>
+      </div>
+  </div>
+  {% endfor %}  
+</div>
+<div class="row g-4">
+    <div class="card">
+        <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+         <tr>
+            <th>Vendedor</th><th>Documento</th><th>Teléfono</th><th>Correo</th>
+            <th class="num">Total vendido</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pr in items %}
+            <tr>
+                <td class="fw-medium">{{ vendedor }}</td>
+                <td>{{ documento_completo }}</td>
+                <td>{{ pr.telefono }}</td>
+                <td>{{ pr.correo }}</td>
+                <td class="num">{{ total_vendido|pesos }}</td>
+                <td>{{ m.acciones(url_for('productos.editar', id=pr.id_producto),
+                                  url_for('productos.eliminar', id=pr.id_producto),
+                                  'el producto ' ~ pr.nombre_producto) }}</td>
+            </tr>
+            {% else %}
+                {{ m.sin_registros(6) }}
+            {% endfor %}
+      </tbody>
+    </table>
+    </div>
+</div>
+{% endblock %}
