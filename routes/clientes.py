@@ -14,36 +14,17 @@ def _tipos_documento():
                       FROM tipo_documento
                      ORDER BY id_tipo_documento""")
 
-
-def _entero(form, campo, etiqueta, errores, minimo=1, maximo=INT_MAX):
-    """Lee un entero obligatorio del formulario; devuelve None si es inválido."""
-    valor = (form.get(campo) or "").strip()
-    if not valor:
-        errores.append(f"{etiqueta} es obligatorio.")
-        return None
-    try:
-        numero = int(valor)
-    except ValueError:
-        errores.append(f"{etiqueta} debe ser un número entero.")
-        return None
-    if not minimo <= numero <= maximo:
-        errores.append(f"{etiqueta} debe estar entre {minimo} y {maximo}.")
-        return None
-    return numero
-
-
 def _leer_formulario(form, tipos):
     errores = []
-    telefono = (form.get("telefono") or "").strip()
-    if len(telefono) > 15:
-        errores.append("Teléfono no puede superar 15 caracteres.")
-
     datos = {
-        "id_tipo_documento": _entero(form, "id_tipo_documento", "Tipo de documento", errores),
-        "documento": _entero(form, "documento", "Documento", errores),
+        "id_tipo_documento": v.entero(form, "id_tipo_documento", "Tipo de documento",
+                                      errores, minimo=1),
+        "documento": v.entero(form, "documento", "Documento",
+                              errores, minimo=1, maximo=INT_MAX),
         "nombre_cliente": v.texto(form, "nombre_cliente", "Nombre", errores, max_len=50),
         "apellido_cliente": v.texto(form, "apellido_cliente", "Apellido", errores, max_len=50),
-        "telefono": telefono or None,
+        "telefono": v.texto(form, "telefono", "Teléfono", errores,
+                            obligatorio=False, max_len=15),
         "email": v.email(form, "email", "Email", errores),
     }
 
@@ -51,7 +32,6 @@ def _leer_formulario(form, tipos):
     if datos["id_tipo_documento"] is not None and datos["id_tipo_documento"] not in ids_validos:
         errores.append("Tipo de documento no válido.")
     return datos, errores
-
 
 def _render_form(item, titulo, tipos):
     return render_template("clientes/form.html", item=item, titulo=titulo,
