@@ -3,19 +3,22 @@
 {% block title %}Clientes{% endblock %}
 {% block content %}
 {{ m.encabezado('Clientes', 'people', url_for('clientes.crear'), items|length) }}
-<div class="card card-tabla mb-4">
-  <div class="card-body p-0">
-    <div class="row g-0">
-      <div class="col-6 p-3 border-end">
-        <div class="numero">{{ sc.nuevos_mes }}</div>
-        <div class="small text-secondary">Nuevos este mes</div>
+{% set tarjetas = [
+  ('Nuevos este mes',       'person-plus', sc.nuevos_mes, 'clientes'),
+  ('Cliente más frecuente', 'star',        sc.cliente_frecuente or '—', 'clientes'),
+] %}
+<div class="row g-3 mb-4">
+  {% for label, icon, n, extra in tarjetas %}
+  <div class="col-6">
+      <div class="card card-tabla {{ extra }} h-100">
+        <div class="card-body">
+          <div class="text-secondary"><i class="bi bi-{{ icon }}"></i> {{ label }}</div>
+          <div class="numero">{{ n }}</div>
+          <div class="small text-secondary">registros</div>
+        </div>
       </div>
-      <div class="col-6 p-3">
-        <div class="numero">{{ sc.cliente_frecuente or '—' }}</div>
-        <div class="small text-secondary">Cliente más frecuente</div>
-      </div>
-    </div>
   </div>
+  {% endfor %}
 </div>
 <div class="card">
   <div class="table-responsive">
