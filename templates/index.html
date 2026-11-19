@@ -59,7 +59,7 @@
                 {% for producto in top %}
                     <div class="fs-6 text-dark mb-1">
                     {{ producto.nombre_producto }} 
-                    <span class="text-secondary small ms-1">({{ producto.unidades_vendidas }} unds)</span>
+                    <span class="text-secondary small">({{ producto.unidades_vendidas }} unds)</span>
                 {% else %}
                     <div class="text-muted small">Sin ventas</div>
                 {% endfor %}
