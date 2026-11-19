@@ -6,14 +6,15 @@
 <p class="text-secondary mb-4">Selecciona una tabla para consultar, crear, editar o eliminar registros.</p>
 
 {% set tarjetas = [
-  ('Ventas del Día',   'cash', r.ventas_del_dia | pesos),
-  ('Vendas Totales', 'cash-stack', r.total_ventas | pesos),
-  ('Pedidos Totales',     'receipt', r.pedidos_totales),
+  ('pedidos.listar', 'Ventas del Día',   'cash', r.ventas_del_dia | pesos),
+  ('pedidos.listar', 'Vendas Totales', 'cash-stack', r.total_ventas | pesos),
+  ('pedidos.listar', 'Pedidos Totales',     'receipt', r.pedidos_totales),
 ] %}
 <main>
 <div class="row g-3 mb-4">
-  {% for label, icon, n in tarjetas %}
+  {% for endpoint, label, icon, n in tarjetas %}
   <div class="col-6 col-md-4 col-lg">
+    <a class="card-link-full" href="{{ url_for(endpoint) }}">
       <div class="card card-tabla {{ extra }} h-100">
         <div class="card-body">
           <div class="text-secondary"><i class="bi bi-{{ icon }}"></i> {{ label }}</div>
@@ -21,6 +22,7 @@
           <div class="small text-secondary">registros</div>
         </div>
       </div>
+    </a>
   </div>
   {% endfor %}  
 </div>
