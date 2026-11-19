@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block title %}Productos{% endblock %}
+{% block content %}
+{{ m.encabezado('Productos', 'box-seam', url_for('productos.crear'), items|length) }}
+
+<main>
+<div class="row g-4">
+<section class="col-12 col-md-8">
+    <div class="card">
+        <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+         <tr>
+            <th>Producto</th><th>Categoría</th>
+            <th class="num">Precio de venta</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pr in items %}
+            <tr>
+                <td>{{ pr.id_producto }}</td>
+                <td class="fw-medium">{{ pr.nombre_producto }}</td>
+                <td><span class="badge text-bg-light border">{{ pr.nombre_categoria }}</span></td>
+                <td class="num">{{ pr.precio_venta|pesos }}</td>
+                <td>{{ m.acciones(url_for('productos.editar', id=pr.id_producto),
+                                  url_for('productos.eliminar', id=pr.id_producto),
+                                  'el producto ' ~ pr.nombre_producto) }}</td>
+            </tr>
+            {% else %}
+                {{ m.sin_registros(6) }}
+            {% endfor %}
+      </tbody>
+    </table>
+    </div>
+</div>
+</section>
+<aside class="col-12 col-md-4">
+<div class="row g-3">
+    <div class="col-6 col-md-4 col-lg">
+        <div class="card card-tabla {{ extra }} h-100">
+            <div class="card-body">
+            <div class="text-secondary"><i class="bi bi-trophy"></i> Producto</div>
+            <div class="numero">{{ top.top }}</div>
+            <div class="small text-secondary">Mas vendido</div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</aside>
+</main>
+{% endblock %}
