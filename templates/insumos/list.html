@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block title %}Insumos{% endblock %}
+{% block content %}
+{{ m.encabezado('Insumos', 'box-seam', url_for('insumos.crear'), items|length) }}
+
+<main>
+<div class="row g-4">
+<section class="col-12 col-md-8">
+    <div class="card">
+        <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+         <tr>
+            <th>Insumo</th><th>unidad</th><th>estado</th>
+            <th class="num">Stock</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in items %}
+            <tr>
+                <td>{{ i.id_insumo }}</td>
+                <td class="fw-medium">{{ i.nombre_insumo }}</td>
+                <td><span class="badge text-bg-light border">{{ i.unidad_medida }}</span></td>
+                <td class="num">{{ i.stock_actual|int }}</td>
+                <td>{{ m.acciones(url_for('insumos.editar', id=i.id_insumo),
+                                  url_for('insumos.eliminar', id=i.id_insumo),
+                                  'el insumo ' ~ i.nombre_insumo) }}</td>
+            </tr>
+            {% else %}
+                {{ m.sin_registros(5) }}
+            {% endfor %}
+      </tbody>
+    </table>
+    </div>
+</div>
+</section>
+<aside class="col-12 col-md-4">
+<div class="row g-3">
+    <div class="col-6 col-md-4 col-lg">
+        <div class="card card-tabla {{ extra }} h-100">
+            <div class="card-body">
+            <div class="text-secondary"><i class="bi bi-exclamation-triangle"></i> Insumo con menos stock</div>
+        <div class="numero">{{ bajo.nombre_insumo if bajo else '—' }}</div>
+        <div class="small text-secondary">
+          {% if bajo %}{{ '%g' % bajo.stock_actual }} {{ bajo.unidad_medida }}{% else %}sin registros{% endif %}
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

@@ -12,7 +12,7 @@ def texto(form, campo, etiqueta, errores, obligatorio=True, max_len=None):
     return valor or None
 
 
-def entero(form, campo, etiqueta, errores, minimo=None):
+def entero(form, campo, etiqueta, errores, minimo=None, maximo=None):
     valor = (form.get(campo) or "").strip()
     if not valor:
         errores.append(f"El campo «{etiqueta}» es obligatorio.")

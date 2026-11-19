@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card"><div class="card-body">
+  <form method="post" novalidate>
+    <div class="row g-4">
+  <div class="col-md-5">
+    <label for="nombre_insumo" class="form-label">Nombre del insumo *</label>
+    <input type="text" class="form-control" id="nombre_insumo" name="nombre_insumo"
+           maxlength="100" required value="{{ item.nombre_insumo or '' }}">
+  </div>
+  <div class="col-md-3">
+    <label for="unidad_medida" class="form-label">Unidad de medida *</label>
+    <select class="form-select" id="unidad_medida" name="unidad_medida" required>
+      <option value="">Seleccione…</option>
+      {% for u in unidades %}
+        <option value="{{ u }}" {{ 'selected' if item.unidad_medida == u }}>{{ u }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label for="stock_actual" class="form-label">Stock *</label>
+    <input type="number" class="form-control" id="stock_actual" name="stock_actual"
+           min="0" step="0.01" required
+           value="{{ item.stock_actual if item.stock_actual is defined and item.stock_actual is not none else '' }}">
+  </div>
+</div>
+    {{ m.botones_form(url_for('insumos.listar')) }}
+  </form>
+</div></div>
+{% endblock %}
