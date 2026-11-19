@@ -63,8 +63,6 @@ def listar():
             SELECT CONCAT(v.nombre_vendedor, ' ', v.apellido_vendedor) AS vendedor_top
             FROM vendedores v
             JOIN pedidos p ON v.id_vendedor = p.id_vendedor
-            WHERE p.fecha_compra >= CURRENT_DATE
-            AND p.fecha_compra <  CURRENT_DATE + 1
             GROUP BY v.id_vendedor, v.nombre_vendedor, v.apellido_vendedor
             ORDER BY COUNT(p.id_pedido) DESC
             LIMIT 1;

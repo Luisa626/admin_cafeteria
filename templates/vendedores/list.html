@@ -6,7 +6,7 @@
 
 {% set tarjetas = [
   ('Pedidos atendidos hoy',   'bag-check', pedidos_hoy.pedidos_hoy),
-  ('Más pedidos hoy', 'star', pedidos_atendidos.pedidos_atendidos or '—'),
+  ('Mejor vendedor', 'star', pedidos_atendidos.vendedor_top or '—'),
 ] %}
 <main>
 <div class="row g-3 mb-4">
