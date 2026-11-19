@@ -26,14 +26,13 @@
     <table class="table table-hover align-middle mb-0">
       <thead>
         <tr>
-          <th>ID</th><th>Documento</th><th>Cliente</th><th>Teléfono</th><th>Email</th>
+          <th>Documento</th><th>Cliente</th><th>Teléfono</th><th>Email</th>
           <th>Registro</th><th class="num">Pedidos</th><th></th>
         </tr>
       </thead>
       <tbody>
         {% for c in items %}
         <tr>
-          <td>{{ c.id_cliente }}</td>
           <td>{{ c.sigla }} {{ c.documento }}</td>
           <td class="fw-medium">{{ c.nombre_cliente }} {{ c.apellido_cliente }}</td>
           <td>{{ c.telefono or '' }}</td>
