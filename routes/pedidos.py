@@ -187,5 +187,34 @@ def eliminar(id):
         flash(error_message(exc), "danger")
     return redirect(url_for(".listar"))
 
+@bp.route("/<int:id_pedido>/ver")
+def ver(id_pedido):
+    pedido = query("""
+        SELECT p.id_pedido, p.fecha_compra,
+               CONCAT(c.nombre_cliente, ' ', c.apellido_cliente) AS cliente,
+               CONCAT(v.nombre_vendedor, ' ', v.apellido_vendedor) AS vendedor
+          FROM pedidos p
+          JOIN clientes c   ON c.id_cliente = p.id_cliente
+          JOIN vendedores v ON v.id_vendedor = p.id_vendedor
+         WHERE p.id_pedido = %s
+    """, (id_pedido,), one=True)
+    if pedido is None:
+        abort(404)
+
+    lineas = query("""
+        SELECT d.id_detalle, pr.nombre_producto, d.cantidad, d.precio_unitario,
+               d.cantidad * d.precio_unitario AS subtotal
+          FROM detalle_pedidos d
+          JOIN productos pr ON pr.id_producto = d.id_producto
+         WHERE d.id_pedido = %s
+         ORDER BY d.id_detalle
+    """, (id_pedido,))
+    total = sum(l["subtotal"] for l in lineas)
+    productos = query("""SELECT id_producto, nombre_producto, precio_venta
+                           FROM productos ORDER BY nombre_producto""")
+    return render_template("pedidos/ver.html", titulo=f"Pedido #{id_pedido}",
+                           pedido=pedido, lineas=lineas, total=total,
+                           productos=productos)
+
 
 
