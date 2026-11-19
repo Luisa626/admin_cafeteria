@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card"><div class="card-body">
+  <form method="post" novalidate>
+    <div class="row g-3">
+        <div class="col-md-6">
+        <label for="id_tipo_documento" class="form-label">Tipo de documento *</label>
+        <select class="form-select" id="id_tipo_documento" name="id_tipo_documento" required>
+          <option value="">Seleccione…</option>
+          {% for tp in tipo_documento %}
+            <option value="{{ tp.id_tipo_documento }}" 
+            {{ 'selected' if item.id_tipo_documento == tp.id_tipo_documento }}>
+            {{ tp.sigla }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="documento" class="form-label">Documento *</label>
+        <input type="number" class="form-control" id="documento" name="documento"
+            min="1" step="1" required
+            value="{{ item.documento if item.documento is not none }}">
+      </div>
+      <div class="col-md-6">
+        <label for="nombre_vendedor" class="form-label">Nombre del vendedor *</label>
+        <input type="text" class="form-control" id="nombre_vendedor" name="nombre_vendedor"
+               maxlength="50" required value="{{ item.nombre_vendedor or '' }}">
+      </div>
+      <div class="col-md-6">
+        <label for="apellido_vendedor" class="form-label">Apellido del vendedor *</label>
+        <input type="text" class="form-control" id="apellido_vendedor" name="apellido_vendedor"
+               maxlength="50" required value="{{ item.apellido_vendedor or '' }}">
+      </div>
+      <div class="col-md-6">
+        <label for="telefono" class="form-label">Teléfono *</label>
+        <input type="text" class="form-control" id="telefono" name="telefono"
+               maxlength="15" required value="{{ item.telefono or '' }}">
+      </div>
+      <div class="col-md-6">
+        <label for="email" class="form-label">Email *</label>
+        <input type="email" class="form-control" id="email" name="email"
+               maxlength="100" required value="{{ item.email or '' }}">
+      </div>
+    </div>
+    {{ m.botones_form(url_for('vendedores.listar')) }}
+  </form>
+</div></div>
+{% endblock %}
