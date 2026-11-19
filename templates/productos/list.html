@@ -6,7 +6,7 @@
 
 <main>
 <div class="row g-4">
-<section class="col-12 col-md-8">
+<section class="col-12 col-md-9">
     <div class="card">
         <div class="table-responsive">
     <table class="table table-hover align-middle mb-0">
@@ -34,17 +34,25 @@
     </div>
 </div>
 </section>
-<aside class="col-12 col-md-4">
+<aside class="col-12 col-md-3">
 <div class="row g-3">
-    <div class="col-6 col-md-4 col-lg">
-        <div class="card card-tabla {{ extra }} h-100">
-            <div class="card-body">
-            <div class="text-secondary"><i class="bi bi-trophy"></i> Producto</div>
-            <div class="numero">{{ top.top }}</div>
-            <div class="small text-secondary">Mas vendido</div>
-            </div>
+  <div class="col-6 col-md-4 col-lg">
+    <div class="card card-tabla h-100">
+      <div class="card-body p-3">
+        <div class="text-secondary mb-2">
+          <i class="bi bi-trophy"></i> Producto más vendido
         </div>
+
+        {% for producto in top %}
+          <div class="d-flex justify-content-between align-items-baseline gap-2 mb-1">
+            <span class="fs-6 text-dark">{{ producto.nombre_producto }}</span>
+          </div>
+        {% else %}
+          <div class="text-muted small">Sin ventas</div>
+        {% endfor %}
+      </div>
     </div>
+  </div>
 </div>
 </div>
 </aside>
