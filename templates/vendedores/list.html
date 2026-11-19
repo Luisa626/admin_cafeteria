@@ -35,14 +35,14 @@
         <tbody>
             {% for pr in items %}
             <tr>
-                <td class="fw-medium">{{ vendedor }}</td>
-                <td>{{ documento_completo }}</td>
+                <td class="fw-medium">{{ pr.vendedor }}</td>
+                <td>{{ pr.documento_completo }}</td>
                 <td>{{ pr.telefono }}</td>
-                <td>{{ pr.correo }}</td>
-                <td class="num">{{ total_vendido|pesos }}</td>
-                <td>{{ m.acciones(url_for('productos.editar', id=pr.id_producto),
-                                  url_for('productos.eliminar', id=pr.id_producto),
-                                  'el producto ' ~ pr.nombre_producto) }}</td>
+                <td>{% if pr.correo %}<a href="mailto:{{ pr.email }}">{{ pr.correo }}</a>{% endif %}</td>
+                <td class="num">{{ pr.total_vendido|pesos }}</td>
+                <td>{{ m.acciones(url_for('vendedores.editar', id=pr.id_vendedor),
+                                  url_for('vendedores.eliminar', id=pr.id_vendedor),
+                                  'el vendedor ' ~ pr.nombre_vendedor) }}</td>
             </tr>
             {% else %}
                 {{ m.sin_registros(6) }}
