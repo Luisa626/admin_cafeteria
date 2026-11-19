@@ -58,3 +58,38 @@ def crear():
         for e in errores:
             flash(e, "danger")
     return _render_form(item, "Nuevo producto")
+
+@bp.route("/<int:id>/editar", methods=["GET", "POST"])
+def editar(id):
+    item = query("SELECT * FROM productos WHERE id_producto = %s", (id,), one=True)
+    if item is None:
+        abort(404)
+    if request.method == "POST":
+        item = {**item, **request.form.to_dict()}
+        datos, errores = _leer_formulario(request.form)
+        if not errores:
+            try:
+                execute("""UPDATE productos
+                              SET nombre_producto = %(nombre_producto)s,
+                                  id_categoria    = %(id_categoria)s,
+                                  precio_venta    = %(precio_venta)s,
+                            WHERE id_producto = %(id)s""",
+                        {**datos, "id": id})
+                flash("Producto actualizado correctamente.", "success")
+                return redirect(url_for(".listar"))
+            except DatabaseError as exc:
+                errores.append(error_message(exc))
+        for e in errores:
+            flash(e, "danger")
+    return _render_form(item, "Editar producto")
+
+@bp.route("/<int:id>/eliminar", methods=["POST"])
+def eliminar(id):
+    try:
+        if execute("DELETE FROM productos WHERE id_producto = %s", (id,)):
+            flash("Producto eliminado.", "success")
+        else:
+            flash("El producto no existe.", "warning")
+    except DatabaseError as exc:
+        flash(error_message(exc), "danger")
+    return redirect(url_for(".listar"))
