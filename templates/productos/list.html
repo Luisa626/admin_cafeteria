@@ -2,7 +2,7 @@
 {% import "macros.html" as m %}
 {% block title %}Productos{% endblock %}
 {% block content %}
-{{ m.encabezado('Productos', 'box-seam', url_for('productos.crear'), items|length) }}
+{{ m.encabezado('Productos', 'basket', url_for('productos.crear'), items|length) }}
 
 <main>
 <div class="row g-4">
