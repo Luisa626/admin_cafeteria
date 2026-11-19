@@ -47,7 +47,7 @@ def categoria_crear():
 
         try:
             execute(
-                "INSERT INTO categoria (nombre_categoria) VALUES (%s)",
+                "INSERT INTO categorias (nombre_categoria) VALUES (%s)",
                 (nombre,),
             )
             flash("Categoría creada correctamente.", "success")
@@ -62,7 +62,7 @@ def categoria_crear():
 @bp.route("/categoria/editar/<int:id>", methods=["GET", "POST"])
 def categoria_editar(id):
     rows = query(
-        "SELECT id_categoria, nombre_categoria FROM categoria WHERE id_categoria = %s",
+        "SELECT id_categoria, nombre_categoria FROM categorias WHERE id_categoria = %s",
         (id,),
     )
     if not rows:
@@ -78,7 +78,7 @@ def categoria_editar(id):
 
         try:
             execute(
-                "UPDATE categoria SET nombre_categoria = %s WHERE id_categoria = %s",
+                "UPDATE categorias SET nombre_categoria = %s WHERE id_categoria = %s",
                 (nombre, id),
             )
             flash("Categoría actualizada correctamente.", "success")
@@ -92,7 +92,7 @@ def categoria_editar(id):
 @bp.route("/categoria/eliminar/<int:id>", methods=["POST"])
 def categoria_eliminar(id):
     try:
-        execute("DELETE FROM categoria WHERE id_categoria = %s", (id,))
+        execute("DELETE FROM categorias WHERE id_categoria = %s", (id,))
         flash("Categoría eliminada.", "success")
     except DatabaseError as e:
         flash(error_message(e), "danger")
