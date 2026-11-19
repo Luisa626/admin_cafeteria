@@ -7,7 +7,7 @@ from db import DatabaseError, error_message, execute, query
 
 bp = Blueprint("clientes", __name__, url_prefix="/clientes")
 
-INT_MAX = 2147483647  # límite de un INTEGER en PostgreSQL
+INT_MAX = 2147483647  
 
 
 def _tipos_documento():
