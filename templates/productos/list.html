@@ -9,37 +9,30 @@
 <section class="col-12 col-md-9">
     <div class="card">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Categoría</th>
-                        <th class="num">Precio de venta</th>
-                        <!-- Agregamos text-end al encabezado de los botones -->
-                        <th class="text-end"></th> 
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for pr in items %}
-                    <tr>
-                        <td class="fw-medium">{{ pr.nombre_producto }}</td>
-                        <td><span class="badge text-bg-light border">{{ pr.nombre_categoria }}</span></td>
-                        <td class="num">{{ pr.precio_venta|pesos }}</td>
-                        <!-- Agregamos text-end y text-nowrap a la celda -->
-                        <td class="text-end text-nowrap">
-                            {{ m.acciones(url_for('productos.editar', id=pr.id_producto),
-                                          url_for('productos.eliminar', id=pr.id_producto),
-                                          'el producto ' ~ pr.nombre_producto) }}
-                        </td>
-                    </tr>
-                    {% else %}
-                        <!-- Nota: Si tu tabla solo tiene 4 columnas arriba, cambia este 6 por un 4 -->
-                        {{ m.sin_registros(4) }} 
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+         <tr>
+            <th>Producto</th><th>Categoría</th>
+            <th class="num">Precio de venta</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pr in items %}
+            <tr>
+                <td class="fw-medium">{{ pr.nombre_producto }}</td>
+                <td><span class="badge text-bg-light border">{{ pr.nombre_categoria }}</span></td>
+                <td class="num">{{ pr.precio_venta|pesos }}</td>
+                <td>{{ m.acciones(url_for('productos.editar', id=pr.id_producto),
+                                  url_for('productos.eliminar', id=pr.id_producto),
+                                  'el producto ' ~ pr.nombre_producto) }}</td>
+            </tr>
+            {% else %}
+                {{ m.sin_registros(6) }}
+            {% endfor %}
+      </tbody>
+    </table>
     </div>
+</div>
 </section>
 <aside class="col-12 col-md-3">
     <div class="card card-tabla">
