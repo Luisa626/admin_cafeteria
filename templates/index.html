@@ -2,7 +2,7 @@
 {% import "macros.html" as m %}
 {% block title %}Inicio{% endblock %}
 {% block content %}
-<h1 class="h3 mb-1">Panel principal de la cafetería <code>admin_cafeteria_db</code></h1>
+<h1 class="h3 mb-1">Panel principal de la cafetería</h1>
 <p class="text-secondary mb-4">Selecciona una tabla para consultar, crear, editar o eliminar registros.</p>
 
 {% set tarjetas = [
@@ -57,25 +57,24 @@
         </div>
     </section>
     <aside class="col-12 col-md-3">
-<div class="row g-3">
-    <div class="col-6 col-md-4 col-lg">
-        <a class="card-link-full" href="{{ url_for('productos.listar') }}">
-        <div class="card card-tabla h-100">
-            <div class="card-body">
-                <div class="text-secondary"><i class="bi bi-trophy"></i> Top productos</div>
-                {% for producto in top %}
-                    <div class="fs-6 text-dark mb-1">
-                    {{ producto.nombre_producto }} 
-                    <span class="text-secondary small">({{ producto.unidades_vendidas }} unds)</span>
-                {% else %}
-                    <div class="text-muted small">Sin ventas</div>
-                {% endfor %}
+        <a class="card-link-full text-decoration-none" href="{{ url_for('productos.listar') }}">
+            <div class="card card-tabla">
+                <div class="card-body">
+                    <div class="text-secondary mb-3"><i class="bi bi-trophy"></i> Top productos</div>
+                    
+                    {% for producto in top %}
+                        <div class="fs-6 text-dark mb-1">
+                            {{ producto.nombre_producto }} 
+                        </div> 
+                    {% else %}
+                        <div class="text-muted small">Sin ventas</div>
+                    {% endfor %}
+                    
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-    </div>
+        </a> 
     </aside>
+</div>
 </div>
 </main>
 {% endblock %}
