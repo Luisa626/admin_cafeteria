@@ -14,7 +14,7 @@
     <i class="bi bi-pencil"></i>
   </a>
   <form method="post" action="{{ url_eliminar }}"
-        onsubmit="return confirm({{ ('¿Eliminar ' ~ descripcion ~ '?')|tojson }});">
+        onsubmit='return confirm({{ ("¿Eliminar " ~ descripcion ~ "?")|tojson }});'>
     <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
       <i class="bi bi-trash"></i>
     </button>
