@@ -27,37 +27,43 @@
 <div class="row g-4">
     <div class="card">
         <div class="table-responsive">
-    <table class="table table-hover align-middle mb-0">
-        <thead>
-         <tr>
-            <th>Pedido</th><th>Fecha</th><th>Cliente</th><th>Vendedor</th>
-            <th class="num">Total</th><th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in items %}
-            <tr>
-                <td class="fw-medium">{{ p.id_pedido }}</td>
-                <td>{{ p.fecha_compra.strftime('%d/%m/%Y %H:%M') }}</td>
-                <td>{{ p.cliente }}</td>
-                <td>{{ p.vendedor }}</td>
-                <td class="num">{{ p.total | pesos }}</td>
-                <td>
-                <a href="{{ url_for('pedidos.detalle', id_pedido=p.id_pedido) }}"
-                    class="btn btn-sm btn-outline-secondary">Productos</a>
-                {{ m.acciones(url_for('pedidos.editar', id=p.id_pedido),
-                                url_for('pedidos.eliminar', id=p.id_pedido),
-                                'el pedido ' ~ p.id_pedido) }}
-                </td>
-            </tr>
-            {% else %}
-                {{ m.sin_registros(6) }}
-            {% endfor %}
-      </tbody>
-    </table>
-  </div>  
-</div>    
-</div>     
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Vendedor</th>
+                        <th class="num">Total</th>
+                        <th class="text-end"></th> <!-- Encabezado para botones -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in items %}
+                    <tr>
+                        <td class="fw-medium">{{ p.id_pedido }}</td>
+                        <td>{{ p.fecha_compra.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>{{ p.cliente }}</td>
+                        <td>{{ p.vendedor }}</td>
+                        <td class="num">{{ p.total | pesos }}</td>
+                        <td class="text-end text-nowrap">
+                            <div class="d-flex gap-2 justify-content-end align-items-center">
+                                <a href="{{ url_for('pedidos.detalle', id_pedido=p.id_pedido) }}"
+                                   class="btn btn-sm btn-outline-secondary">Productos</a>
+                                {{ m.acciones(url_for('pedidos.editar', id=p.id_pedido),
+                                              url_for('pedidos.eliminar', id=p.id_pedido),
+                                              'el pedido ' ~ p.id_pedido) }}
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                        {{ m.sin_registros(6) }}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>  
+    </div>    
+</div>
 </main>
 {% endblock %}
 
