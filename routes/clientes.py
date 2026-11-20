@@ -128,3 +128,22 @@ def eliminar(id):
         flash(error_message(exc), "danger")
     return redirect(url_for(".listar"))
 
+def error_message(err):
+    code = getattr(err, "pgcode", None)
+    texto = str(err).lower()
+
+    # 1. Error de llave foránea (intentar borrar un registro con hijos o insertar un ID padre que no existe)
+    if code == "23503" or "foreign key" in texto or "violates restrict" in texto:
+        if "delete" in texto or "restrict" in texto:
+            return "No se puede eliminar el registro porque está relacionado con otros datos."
+        return "El registro relacionado seleccionado no existe."
+
+    # 2. Error de entero fuera de rango
+    if code == "22003" or "fuera de rango" in texto or "out of range" in texto:
+        return "El valor ingresado debe ser menor o igual a 2147483647."
+
+    # 3. Error de llave única / duplicada (ej. documento repetido)
+    if code == "23505" or "unique" in texto or "duplicada" in texto:
+        return "Ya existe un registro con esos datos."
+
+    return f"Error de base de datos: {err}"
