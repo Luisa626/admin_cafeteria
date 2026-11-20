@@ -5,17 +5,17 @@ from db import DatabaseError, error_message, execute, query
 
 bp = Blueprint("vendedores", __name__, url_prefix="/vendedores")
 
-INT_MAX = 2147483647  # límite de un INTEGER en PostgreSQL
+INT_MAX = 2147483647 
 
 def _leer_formulario(form):
     errores = []
     datos = {
         "id_tipo_documento": v.entero(form, "id_tipo_documento", "Tipo de documento", errores, minimo=1),
-        "documento": v.texto(form, "documento", "Documento", errores, max_len=20),
+        "documento": v.entero(form, "documento", "Documento", errores, minimo=1, maximo=INT_MAX),
         "nombre_vendedor": v.texto(form, "nombre_vendedor", "Nombre", errores, max_len=100),
         "apellido_vendedor": v.texto(form, "apellido_vendedor", "Apellido", errores, max_len=100),
         "telefono": v.texto(form, "telefono", "Teléfono", errores, max_len=15),
-        "email": v.texto(form, "email", "Email", errores, max_len=100),
+        "email": v.email(form, "email", "Email", errores),
     }
     return datos, errores
 

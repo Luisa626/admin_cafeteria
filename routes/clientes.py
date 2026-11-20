@@ -1,4 +1,3 @@
-"""CRUD de la tabla clientes."""
 from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 
 import validators as v

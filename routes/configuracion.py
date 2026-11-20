@@ -6,6 +6,33 @@ from db import DatabaseError, error_message, execute, query
 bp = Blueprint("configuracion", __name__, url_prefix="/configuracion")
 
 
+# --- FUNCIONES DE VALIDACIÓN ---
+
+def _leer_formulario_categoria(form):
+    errores = []
+    datos = {
+        # Asumo 100 caracteres de máximo, ajusta si tu BD tiene otro límite
+        "nombre_categoria": v.texto(form, "nombre_categoria", "Nombre de la categoría", errores, max_len=100)
+    }
+    return datos, errores
+
+
+def _leer_formulario_tipo_doc(form):
+    errores = []
+    datos = {
+        "sigla": v.texto(form, "sigla", "Sigla", errores, max_len=5),
+        "descripcion": v.texto(form, "descripcion", "Descripción", errores, max_len=50),
+    }
+    
+    # Si la sigla pasó la validación de texto (no está vacía), la pasamos a mayúsculas
+    if datos["sigla"]:
+        datos["sigla"] = datos["sigla"].upper()
+        
+    return datos, errores
+
+
+# --- RUTAS PRINCIPALES ---
+
 # 1. LISTAR
 @bp.route("/")
 def listar():
@@ -38,25 +65,26 @@ def listar():
 @bp.route("/categoria/", methods=["GET", "POST"])
 @bp.route("/categoria/crear", methods=["GET", "POST"])
 def categoria_crear():
+    item = {}
     if request.method == "POST":
-        nombre = request.form.get("nombre_categoria", "").strip()
+        item = request.form.to_dict()
+        datos, errores = _leer_formulario_categoria(request.form)
 
-        if not nombre:
-            flash("El nombre de la categoría es obligatorio.", "warning")
-            return render_template("configuracion/categoria_form.html", item=request.form)
+        if not errores:
+            try:
+                execute(
+                    "INSERT INTO categorias (nombre_categoria) VALUES (%(nombre_categoria)s)",
+                    datos,
+                )
+                flash("Categoría creada correctamente.", "success")
+                return redirect(url_for("configuracion.listar"))
+            except DatabaseError as e:
+                errores.append(error_message(e))
+                
+        for e in errores:
+            flash(e, "danger")
 
-        try:
-            execute(
-                "INSERT INTO categorias (nombre_categoria) VALUES (%s)",
-                (nombre,),
-            )
-            flash("Categoría creada correctamente.", "success")
-            return redirect(url_for("configuracion.listar"))
-        except DatabaseError as e:
-            flash(error_message(e), "danger")
-            return render_template("configuracion/categoria_form.html", item=request.form)
-
-    return render_template("configuracion/categoria_form.html", item=None)
+    return render_template("configuracion/categoria_form.html", item=item if item else None)
 
 
 @bp.route("/categoria/editar/<int:id>", methods=["GET", "POST"])
@@ -70,21 +98,22 @@ def categoria_editar(id):
     item = rows[0]
 
     if request.method == "POST":
-        nombre = request.form.get("nombre_categoria", "").strip()
+        item = {**item, **request.form.to_dict()}
+        datos, errores = _leer_formulario_categoria(request.form)
 
-        if not nombre:
-            flash("El nombre de la categoría es obligatorio.", "warning")
-            return render_template("configuracion/categoria_form.html", item=item)
-
-        try:
-            execute(
-                "UPDATE categorias SET nombre_categoria = %s WHERE id_categoria = %s",
-                (nombre, id),
-            )
-            flash("Categoría actualizada correctamente.", "success")
-            return redirect(url_for("configuracion.listar"))
-        except DatabaseError as e:
-            flash(error_message(e), "danger")
+        if not errores:
+            try:
+                execute(
+                    "UPDATE categorias SET nombre_categoria = %(nombre_categoria)s WHERE id_categoria = %(id)s",
+                    {**datos, "id": id},
+                )
+                flash("Categoría actualizada correctamente.", "success")
+                return redirect(url_for("configuracion.listar"))
+            except DatabaseError as e:
+                errores.append(error_message(e))
+                
+        for e in errores:
+            flash(e, "danger")
 
     return render_template("configuracion/categoria_form.html", item=item)
 
@@ -100,40 +129,32 @@ def categoria_eliminar(id):
     return redirect(url_for("configuracion.listar"))
 
 
-# 2. CREAR
+# --- RUTAS PARA TIPO DE DOCUMENTO ---
+
 @bp.route("/nuevo", methods=["GET", "POST"])
 def nuevo():
+    item = {}
     if request.method == "POST":
-        sigla = request.form.get("sigla", "").strip().upper()
-        descripcion = request.form.get("descripcion", "").strip()
+        item = request.form.to_dict()
+        datos, errores = _leer_formulario_tipo_doc(request.form)
 
-        if not sigla or not descripcion:
-            flash("La sigla y la descripción son obligatorias.", "warning")
-            return render_template("configuracion/form.html", item=request.form)
+        if not errores:
+            try:
+                execute(
+                    "INSERT INTO tipo_documento (sigla, descripcion) VALUES (%(sigla)s, %(descripcion)s)",
+                    datos,
+                )
+                flash("Tipo de documento creado correctamente.", "success")
+                return redirect(url_for("configuracion.listar"))
+            except DatabaseError as e:
+                errores.append(error_message(e))
+                
+        for e in errores:
+            flash(e, "danger")
 
-        if len(sigla) > 5:
-            flash("La sigla no puede tener más de 5 caracteres.", "warning")
-            return render_template("configuracion/form.html", item=request.form)
-
-        if len(descripcion) > 50:
-            flash("La descripción no puede tener más de 50 caracteres.", "warning")
-            return render_template("configuracion/form.html", item=request.form)
-
-        try:
-            execute(
-                "INSERT INTO tipo_documento (sigla, descripcion) VALUES (%s, %s)",
-                (sigla, descripcion),
-            )
-            flash("Tipo de documento creado correctamente.", "success")
-            return redirect(url_for("configuracion.listar"))
-        except DatabaseError as e:
-            flash(error_message(e), "danger")
-            return render_template("configuracion/form.html", item=request.form)
-
-    return render_template("configuracion/form.html", item=None)
+    return render_template("configuracion/form.html", item=item if item else None)
 
 
-# 3. EDITAR
 @bp.route("/editar/<int:id>", methods=["GET", "POST"])
 def editar(id):
     rows = query(
@@ -149,31 +170,26 @@ def editar(id):
     item = rows[0]
 
     if request.method == "POST":
-        sigla = request.form.get("sigla", "").strip().upper()
-        descripcion = request.form.get("descripcion", "").strip()
+        item = {**item, **request.form.to_dict()}
+        datos, errores = _leer_formulario_tipo_doc(request.form)
 
-        if not sigla or not descripcion:
-            flash("La sigla y la descripción son obligatorias.", "warning")
-            return render_template("configuracion/form.html", item=item)
+        if not errores:
+            try:
+                execute(
+                    "UPDATE tipo_documento SET sigla = %(sigla)s, descripcion = %(descripcion)s WHERE id_tipo_documento = %(id)s",
+                    {**datos, "id": id},
+                )
+                flash("Tipo de documento actualizado correctamente.", "success")
+                return redirect(url_for("configuracion.listar"))
+            except DatabaseError as e:
+                errores.append(error_message(e))
 
-        if len(sigla) > 5 or len(descripcion) > 50:
-            flash("La sigla (máx. 5) o descripción (máx. 50) excede el límite.", "warning")
-            return render_template("configuracion/form.html", item=item)
-
-        try:
-            execute(
-                "UPDATE tipo_documento SET sigla = %s, descripcion = %s WHERE id_tipo_documento = %s",
-                (sigla, descripcion, id),
-            )
-            flash("Tipo de documento actualizado correctamente.", "success")
-            return redirect(url_for("configuracion.listar"))
-        except DatabaseError as e:
-            flash(error_message(e), "danger")
+        for e in errores:
+            flash(e, "danger")
 
     return render_template("configuracion/form.html", item=item)
 
 
-# 4. ELIMINAR
 @bp.route("/eliminar/<int:id>", methods=["POST"])
 def eliminar(id):
     try:

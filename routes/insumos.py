@@ -8,7 +8,7 @@ from db import DatabaseError, error_message, execute, query
 
 bp = Blueprint("insumos", __name__, url_prefix="/insumos")
 
-STOCK_MAX = Decimal("99999999.99")  # límite de numeric(10,2)
+STOCK_MAX = Decimal("99999999.99")  
 
 UNIDADES = ["kg", "lb", "g", "mL", "L", "und"]
 
@@ -23,8 +23,6 @@ def _leer_formulario(form):
     if datos["unidad_medida"] and datos["unidad_medida"] not in UNIDADES:
         errores.append("Unidad de medida no válida.")
     return datos, errores
-    return datos, errores
-
 
 def _render_form(item, titulo):
     return render_template("insumos/form.html", item=item, titulo=titulo,
