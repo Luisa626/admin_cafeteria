@@ -8,25 +8,23 @@
       <div class="row g-3">
         
         <div class="col-md-4">
-          <label for="sigla" class="form-label">Sigla<span class="text-danger">*</span></label>
+          <label for="sigla" class="form-label">Sigla*</span></label>
           <input type="text"
                  class="form-control text-uppercase"
                  id="sigla"
                  name="sigla"
                  maxlength="5"
-                 placeholder="Ej: CC, NIT, CE"
                  value="{{ item.sigla if item else '' }}"
                  required>
         </div>
 
         <div class="col-md-8">
-          <label for="descripcion" class="form-label">Descripción <span class="text-danger">*</span></label>
+          <label for="descripcion" class="form-label">Descripción*</span></label>
           <input type="text"
                  class="form-control"
                  id="descripcion"
                  name="descripcion"
                  maxlength="50"
-                 placeholder="Ej: Cédula de Ciudadanía"
                  value="{{ item.descripcion if item else '' }}"
                  required>
           <div class="form-text">Máximo 50 caracteres.</div>
