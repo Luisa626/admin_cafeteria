@@ -29,7 +29,7 @@
         <thead>
          <tr>
             <th>Vendedor</th><th>Documento</th><th>Teléfono</th><th>Correo</th>
-            <th class="num">Total vendido</th><th></th>
+            <th class="text-center">Total vendido</th><th></th>
             </tr>
         </thead>
         <tbody>
@@ -39,7 +39,7 @@
                 <td>{{ pr.documento_completo }}</td>
                 <td>{{ pr.telefono }}</td>
                 <td>{% if pr.correo %}<a href="mailto:{{ pr.email }}">{{ pr.correo }}</a>{% endif %}</td>
-                <td class="num">{{ pr.total_vendido|pesos }}</td>
+                <td class="text-center">{{ pr.total_vendido|pesos }}</td>
                 <td>{{ m.acciones(url_for('vendedores.editar', id=pr.id_vendedor),
                                   url_for('vendedores.eliminar', id=pr.id_vendedor),
                                   'el vendedor ' ~ pr.nombre_vendedor) }}</td>

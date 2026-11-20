@@ -31,22 +31,22 @@
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
-                        <th>Pedido</th>
+                        <th class="text-center">#Pedido</th>
                         <th>Fecha</th>
                         <th>Cliente</th>
                         <th>Vendedor</th>
-                        <th class="num">Total</th>
-                        <th class="text-end"></th> <!-- Encabezado para botones -->
+                        <th class="text-center">Total</th>
+                        <th class="text-end"></th> 
                     </tr>
                 </thead>
                 <tbody>
                     {% for p in items %}
                     <tr>
-                        <td class="fw-medium">{{ p.id_pedido }}</td>
+                        <td class="fw-medium text-center">#{{ p.id_pedido }}</td>
                         <td>{{ p.fecha_compra.strftime('%d/%m/%Y %H:%M') }}</td>
                         <td>{{ p.cliente }}</td>
                         <td>{{ p.vendedor }}</td>
-                        <td class="num">{{ p.total | pesos }}</td>
+                        <td class="text-center">{{ p.total | pesos }}</td>
                         <td class="text-end text-nowrap">
                             <div class="d-flex gap-2 justify-content-end align-items-center">
                                 <a href="{{ url_for('pedidos.detalle', id_pedido=p.id_pedido) }}"

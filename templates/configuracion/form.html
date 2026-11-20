@@ -7,9 +7,8 @@
     <form method="POST" novalidate>
       <div class="row g-3">
         
-        <!-- Campo Sigla (máximo 5 caracteres según tu tabla PostgreSQL) -->
         <div class="col-md-4">
-          <label for="sigla" class="form-label">Sigla <span class="text-danger">*</span></label>
+          <label for="sigla" class="form-label">Sigla<span class="text-danger">*</span></label>
           <input type="text"
                  class="form-control text-uppercase"
                  id="sigla"
@@ -21,7 +20,6 @@
           <div class="form-text">Máximo 5 caracteres.</div>
         </div>
 
-        <!-- Campo Descripción (máximo 50 caracteres según tu tabla PostgreSQL) -->
         <div class="col-md-8">
           <label for="descripcion" class="form-label">Descripción <span class="text-danger">*</span></label>
           <input type="text"
@@ -36,7 +34,5 @@
         </div>
 
       </div>
-
-      <!-- Botones de acción -->
       {{ m.botones_form(url_for('configuracion.listar')) }}
 {% endblock %}
