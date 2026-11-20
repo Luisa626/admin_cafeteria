@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "macros.html" as m %}
+{% block title %}Pedidos{% endblock %}
 {% block content %}
 
 {{ m.encabezado('Pedidos', 'bag-check', url_for('pedidos.nuevo'), items|length) }}
