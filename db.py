@@ -60,11 +60,23 @@ def execute(sql, params=()):
 def error_message(exc):
     """Traduce los errores más comunes de PostgreSQL a mensajes claros en español."""
     code = getattr(exc, "pgcode", None)
+    texto = str(exc).lower()
     if code == "23503":  # foreign_key_violation
         return ("No se puede completar la operación: el registro está relacionado "
                 "con otros datos (por ejemplo, tiene ventas o productos asociados).")
     if code == "23505":  # unique_violation
-        return "Ya existe un registro con ese valor (campo único duplicado)."
+        if 'clientes_documento_key' in texto:
+            return "Ya existe un cliente registrado con ese número de documento."
+        elif 'vendedores_documento_key' in texto:
+            return "Ya existe un vendedor registrado con ese número de documento."
+        elif 'tipos_documento_sigla_key' in texto:
+            return "Ya existe un tipo de documento con esa sigla."
+        elif 'tipos_documento_descripcion_key' in texto:
+            return "Ya existe un tipo de documento con esa descripción."
+        else:
+            return "Ya existe un registro con esos datos."
+    if code == "22003" or "fuera de rango" in texto or "out of range" in texto:
+        return "El valor ingresado es demasiado grande (debe ser menor o igual a 2147483647)."
     if code == "23514":  # check_violation
         return "Algún valor está fuera del rango permitido por la base de datos."
     if code == "23502":  # not_null_violation
