@@ -24,6 +24,8 @@ def entero(form, campo, etiqueta, errores, minimo=None, maximo=None):
         return None
     if minimo is not None and numero < minimo:
         errores.append(f"«{etiqueta}» debe ser mayor o igual a {minimo}.")
+    if maximo is not None and numero > maximo:
+        errores.append(f"«{etiqueta}» debe ser menor o igual a {maximo}.")
     return numero
 
 
