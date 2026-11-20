@@ -27,11 +27,13 @@
         <label for="nombre_cliente" class="form-label">Nombre *</label>
         <input type="text" class="form-control" id="nombre_cliente" name="nombre_cliente"
                maxlength="50" required value="{{ item.nombre_cliente or '' }}">
+        <div class="form-text">Máximo 50 caracteres.</div>
       </div>
       <div class="col-md-6">
         <label for="apellido_cliente" class="form-label">Apellido *</label>
         <input type="text" class="form-control" id="apellido_cliente" name="apellido_cliente"
                maxlength="50" required value="{{ item.apellido_cliente or '' }}">
+        <div class="form-text">Máximo 50 caracteres.</div>
       </div>
       <div class="col-md-4">
         <label for="telefono" class="form-label">Teléfono</label>

@@ -22,8 +22,8 @@
       <thead>
         <tr>
           <th>Producto</th>
-          <th class="text-end">Cantidad</th>
-          <th class="text-end">Precio unitario</th>
+          <th class="text-center">Cantidad</th>
+          <th class="text-center">Precio unitario</th>
           <th class="text-end">Subtotal</th>
           <th></th>
         </tr>
@@ -32,8 +32,8 @@
         {% for l in lineas %}
         <tr>
           <td>{{ l.nombre_producto }}</td>
-          <td class="text-end">{{ l.cantidad }}</td>
-          <td class="text-end">{{ l.precio_unitario | pesos }}</td>
+          <td class="text-center">{{ l.cantidad }}</td>
+          <td class="text-center">{{ l.precio_unitario | pesos }}</td>
           <td class="text-end">{{ l.subtotal | pesos }}</td>
           <td class="text-end">
           </td>
