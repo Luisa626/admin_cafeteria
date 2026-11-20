@@ -72,7 +72,7 @@ def editar(id):
                 execute("""UPDATE productos
                               SET nombre_producto = %(nombre_producto)s,
                                   id_categoria    = %(id_categoria)s,
-                                  precio_venta    = %(precio_venta)s,
+                                  precio_venta    = %(precio_venta)s
                             WHERE id_producto = %(id)s""",
                         {**datos, "id": id})
                 flash("Producto actualizado correctamente.", "success")
