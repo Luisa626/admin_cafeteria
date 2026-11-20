@@ -13,7 +13,7 @@
           <option value="">Seleccione…</option>
           {% for tp in tipo_documento %}
             <option value="{{ tp.id_tipo_documento }}" 
-            {{ 'selected' if item.id_tipo_documento == tp.id_tipo_documento }}>
+            {{ 'selected' if item.id_tipo_documento|string == tp.id_tipo_documento|string }}>
             {{ tp.sigla }}</option>
           {% endfor %}
         </select>
@@ -35,12 +35,12 @@
                maxlength="50" required value="{{ item.apellido_vendedor or '' }}">
       </div>
       <div class="col-md-4">
-        <label for="telefono" class="form-label">Teléfono *</label>
+        <label for="telefono" class="form-label">Teléfono</label>
         <input type="text" class="form-control" id="telefono" name="telefono"
                maxlength="15" required value="{{ item.telefono or '' }}">
       </div>
       <div class="col-md-8">
-        <label for="email" class="form-label">Correo electrónico *</label>
+        <label for="email" class="form-label">Correo electrónico</label>
         <input type="email" class="form-control" id="email" name="email"
                maxlength="100" required value="{{ item.email or '' }}">
       </div>

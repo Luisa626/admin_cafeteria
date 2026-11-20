@@ -14,7 +14,7 @@ def _leer_formulario(form):
         "documento": v.entero(form, "documento", "Documento", errores, minimo=1, maximo=INT_MAX),
         "nombre_vendedor": v.texto(form, "nombre_vendedor", "Nombre", errores, max_len=50),
         "apellido_vendedor": v.texto(form, "apellido_vendedor", "Apellido", errores, max_len=50),
-        "telefono": v.texto(form, "telefono", "Teléfono", errores, max_len=15),
+        "telefono": v.texto(form, "telefono", "Teléfono", errores, max_len=15, obligatorio=False),
         "email": v.email(form, "email", "Email", errores),
     }
     return datos, errores
@@ -126,11 +126,3 @@ def eliminar(id):
     except DatabaseError as exc:
         flash(error_message(exc), "danger")
     return redirect(url_for(".listar"))
-
-def error_message(exc):
-    code = getattr(exc, "pgcode", None)
-    texto = str(exc).lower()
-    if code == "23503" or "foreign key" in texto or "violates restrict" in texto:
-            if "delete" in texto or "restrict" in texto:
-                return "No se puede eliminar el registro porque está relacionado con otros datos."
-            return "El registro relacionado seleccionado no existe."

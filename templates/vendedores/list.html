@@ -37,7 +37,7 @@
             <tr>
                 <td class="fw-medium">{{ pr.vendedor }}</td>
                 <td>{{ pr.documento_completo }}</td>
-                <td>{{ pr.telefono }}</td>
+                <td>{{ pr.telefono or '' }}</td>
                 <td>{% if pr.correo %}<a href="mailto:{{ pr.email }}">{{ pr.correo }}</a>{% endif %}</td>
                 <td class="text-center">{{ pr.total_vendido|pesos }}</td>
                 <td>{{ m.acciones(url_for('vendedores.editar', id=pr.id_vendedor),
