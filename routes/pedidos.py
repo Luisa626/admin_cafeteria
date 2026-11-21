@@ -32,9 +32,18 @@ def _render_form(item, titulo):
                            clientes=_clientes(), vendedores=_vendedores())
 
 
-# ---------- LISTA (pantalla por defecto) ----------
 @bp.route("/")
 def listar():
+    
+    try:
+        execute("""
+            DELETE FROM pedidos 
+            WHERE id_pedido NOT IN (SELECT id_pedido FROM detalle_pedidos)
+              AND fecha_compra < NOW() - INTERVAL '30 minutes'
+        """)
+    except DatabaseError:
+        pass 
+
     pedidos = query("""
         SELECT p.id_pedido, p.fecha_compra, c.nombre_cliente, c.apellido_cliente,
                v.nombre_vendedor, v.apellido_vendedor,
@@ -42,7 +51,8 @@ def listar():
           FROM pedidos p
           JOIN clientes c   ON c.id_cliente = p.id_cliente
           JOIN vendedores v ON v.id_vendedor = p.id_vendedor
-          LEFT JOIN detalle_pedidos d ON d.id_pedido = p.id_pedido
+          -- Cambiamos LEFT JOIN por JOIN normal para que solo traiga pedidos que sí tienen detalles
+          JOIN detalle_pedidos d ON d.id_pedido = p.id_pedido
          GROUP BY p.id_pedido, c.id_cliente, v.id_vendedor
          ORDER BY p.id_pedido DESC
     """)
