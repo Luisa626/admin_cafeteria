@@ -34,13 +34,17 @@ def init_app(app):
 def query(sql, params=(), one=False):
     """Ejecuta un SELECT. Devuelve una lista de diccionarios (o uno solo si one=True)."""
     conn = get_db()
-    with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute(sql, params)
-        rows = cur.fetchall()
-    conn.commit()
-    if one:
-        return rows[0] if rows else None
-    return rows
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(sql, params)
+            rows = cur.fetchall()
+        conn.commit()
+        if one:
+            return rows[0] if rows else None
+        return rows
+    except psycopg2.Error:
+        conn.rollback()
+        raise
 
 
 def execute(sql, params=()):
@@ -61,7 +65,7 @@ def error_message(exc):
     """Traduce los errores más comunes de PostgreSQL a mensajes claros en español."""
     code = getattr(exc, "pgcode", None)
     texto = str(exc).lower()
-    if code == "23503":  # foreign_key_violation
+    if code == "23503" or "foreign key" in texto or "violates restrict" in texto:
         return ("No se puede completar la operación: el registro está relacionado "
                 "con otros datos (por ejemplo, tiene ventas o productos asociados).")
     if code == "23505":  # unique_violation
@@ -79,6 +83,8 @@ def error_message(exc):
         return "El valor ingresado es demasiado grande (debe ser menor o igual a 2147483647)."
     if code == "23514":  # check_violation
         return "Algún valor está fuera del rango permitido por la base de datos."
-    if code == "23502":  # not_null_violation
+    if code == "23502" or "null value" in texto or "violates not-null" in texto:
         return "Falta un campo obligatorio."
+    if code == "500" or "internal server error" in texto:
+        return "Error en uno o mas datos. Verifica que los datos ingresados sean correctos."
     return f"Error de base de datos: {getattr(exc, 'pgerror', None) or exc}"

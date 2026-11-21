@@ -42,9 +42,10 @@ def listar():
         SELECT td.id_tipo_documento AS id_configuracion,
                td.sigla,
                td.descripcion,
-               COUNT(c.id_cliente) AS usado_por
+               COUNT(c.id_cliente)+COUNT(v.id_vendedor) AS usado_por
         FROM tipo_documento td
         LEFT JOIN clientes c ON c.id_tipo_documento = td.id_tipo_documento
+        LEFT JOIN vendedores v ON v.id_tipo_documento = td.id_tipo_documento
         GROUP BY td.id_tipo_documento, td.sigla, td.descripcion
         ORDER BY td.sigla
     """)
@@ -77,13 +78,13 @@ def categoria_crear():
                 )
                 flash("Categoría creada correctamente.", "success")
                 return redirect(url_for("configuracion.listar"))
-            except DatabaseError as e:
-                errores.append(error_message(e))
-                
+            except DatabaseError as exc:
+                errores.append(error_message(exc))   
         for e in errores:
             flash(e, "danger")
 
     return _render_form_categorias(item, "Nueva categoría")
+
 
 
 @bp.route("/categoria/editar/<int:id>", methods=["GET", "POST"])
@@ -108,11 +109,11 @@ def categoria_editar(id):
                 )
                 flash("Categoría actualizada correctamente.", "success")
                 return redirect(url_for("configuracion.listar"))
-            except DatabaseError as e:
-                errores.append(error_message(e))
+            except DatabaseError as exc:
+                errores.append(error_message(exc))
                 
-        for e in errores:
-            flash(e, "danger")
+        for exc in errores:
+            flash(exc, "danger")
 
     return _render_form_categorias(item, "Editar Categoría")
 
@@ -120,10 +121,12 @@ def categoria_editar(id):
 @bp.route("/categoria/eliminar/<int:id>", methods=["POST"])
 def categoria_eliminar(id):
     try:
-        execute("DELETE FROM categorias WHERE id_categoria = %s", (id,))
-        flash("Categoría eliminada.", "success")
-    except DatabaseError as e:
-        flash(error_message(e), "danger")
+        if execute("DELETE FROM categorias WHERE id_categoria = %s", (id,)):
+            flash("Categoría eliminada.", "success")
+        else:
+            flash("La categoría no existe.", "warning")
+    except DatabaseError as exc:
+        flash(error_message(exc), "danger")
 
     return redirect(url_for("configuracion.listar"))
 
@@ -142,11 +145,11 @@ def nuevo():
                 )
                 flash("Tipo de documento creado correctamente.", "success")
                 return redirect(url_for("configuracion.listar"))
-            except DatabaseError as e:
-                errores.append(error_message(e))
+            except DatabaseError as exc:
+                errores.append(error_message(exc))
                 
-        for e in errores:
-            flash(e, "danger")
+        for exc in errores:
+            flash(exc, "danger")
 
     return _render_form_tipo_doc(item, "Nuevo Tipo de documento")
 
@@ -177,11 +180,11 @@ def editar(id):
                 )
                 flash("Tipo de documento actualizado correctamente.", "success")
                 return redirect(url_for("configuracion.listar"))
-            except DatabaseError as e:
-                errores.append(error_message(e))
+            except DatabaseError as exc:
+                errores.append(error_message(exc))
 
-        for e in errores:
-            flash(e, "danger")
+        for exc in errores:
+            flash(exc, "danger")
 
     return _render_form_tipo_doc(item, "Editar Tipo de documento")
 
@@ -189,9 +192,10 @@ def editar(id):
 @bp.route("/eliminar/<int:id>", methods=["POST"])
 def eliminar(id):
     try:
-        execute("DELETE FROM tipo_documento WHERE id_tipo_documento = %s", (id,))
+       if execute("DELETE FROM tipo_documento WHERE id_tipo_documento = %s", (id,)):
         flash("Tipo de documento eliminado.", "success")
-    except DatabaseError as e:
-        flash(error_message(e), "danger")
-
+       else:
+        flash("El tipo de documento no existe.", "warning")
+    except DatabaseError as exc:
+        flash(error_message(exc), "danger")
     return redirect(url_for("configuracion.listar"))

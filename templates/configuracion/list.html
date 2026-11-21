@@ -26,7 +26,6 @@
         <tr>
           <td>{{ cf.sigla }}</td>
           <td>{{ cf.descripcion }}</td>
-          <!-- Aplicamos la misma clase text-center al dato -->
           <td class="text-center">{{cf.usado_por}}</td>
           <td class="text-end">
             {{ m.acciones(url_for('configuracion.editar', id=cf.id_configuracion),
