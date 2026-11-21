@@ -44,8 +44,8 @@
                     <tr>
                         <td class="fw-medium text-center">#{{ p.id_pedido }}</td>
                         <td>{{ p.fecha_compra.strftime('%d/%m/%Y %H:%M') }}</td>
-                        <td>{{ p.cliente }}</td>
-                        <td>{{ p.vendedor }}</td>
+                        <td>{{ p.nombre_cliente }} {{ p.apellido_cliente }}</td>
+                        <td>{{ p.nombre_vendedor }} {{ p.apellido_vendedor }}</td>
                         <td class="text-center">{{ p.total | pesos }}</td>
                         <td class="text-end text-nowrap">
                             <div class="d-flex gap-2 justify-content-end align-items-center">

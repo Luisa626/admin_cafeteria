@@ -36,9 +36,8 @@ def _render_form(item, titulo):
 @bp.route("/")
 def listar():
     pedidos = query("""
-        SELECT p.id_pedido, p.fecha_compra,
-               CONCAT(c.nombre_cliente, ' ', c.apellido_cliente) AS cliente,
-               CONCAT(v.nombre_vendedor, ' ', v.apellido_vendedor) AS vendedor,
+        SELECT p.id_pedido, p.fecha_compra, c.nombre_cliente, c.apellido_cliente,
+               v.nombre_vendedor, v.apellido_vendedor,
                COALESCE(SUM(d.cantidad * d.precio_unitario), 0) AS total
           FROM pedidos p
           JOIN clientes c   ON c.id_cliente = p.id_cliente
