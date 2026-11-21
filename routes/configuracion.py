@@ -11,8 +11,7 @@ bp = Blueprint("configuracion", __name__, url_prefix="/configuracion")
 def _leer_formulario_categoria(form):
     errores = []
     datos = {
-        # Asumo 100 caracteres de máximo, ajusta si tu BD tiene otro límite
-        "nombre_categoria": v.texto(form, "nombre_categoria", "Nombre de la categoría", errores, max_len=100)
+        "nombre_categoria": v.texto(form, "nombre_categoria", "Nombre de la categoría", errores, obligatorio=True, max_len=50)
     }
     return datos, errores
 
@@ -20,8 +19,8 @@ def _leer_formulario_categoria(form):
 def _leer_formulario_tipo_doc(form):
     errores = []
     datos = {
-        "sigla": v.texto(form, "sigla", "Sigla", errores, max_len=5),
-        "descripcion": v.texto(form, "descripcion", "Descripción", errores, max_len=50),
+        "sigla": v.texto(form, "sigla", "Sigla", errores, obligatorio=True, max_len=5),
+        "descripcion": v.texto(form, "descripcion", "Descripción", errores, obligatorio=True, max_len=50),
     }
     
     # Si la sigla pasó la validación de texto (no está vacía), la pasamos a mayúsculas
@@ -40,9 +39,10 @@ def listar():
         SELECT td.id_tipo_documento AS id_configuracion,
                td.sigla,
                td.descripcion,
-               COUNT(c.id_cliente) AS usado_por
+               COUNT(c.id_cliente)+COUNT(v.id_vendedor) AS usado_por
         FROM tipo_documento td
         LEFT JOIN clientes c ON c.id_tipo_documento = td.id_tipo_documento
+        LEFT JOIN vendedores v ON v.id_tipo_documento = td.id_tipo_documento
         GROUP BY td.id_tipo_documento, td.sigla, td.descripcion
         ORDER BY td.sigla
     """)
@@ -78,12 +78,12 @@ def categoria_crear():
                 )
                 flash("Categoría creada correctamente.", "success")
                 return redirect(url_for("configuracion.listar"))
-            except DatabaseError as e:
-                errores.append(error_message(e))
+            except DatabaseError as exc:
+                errores.append(error_message(exc))
                 
-        for e in errores:
-            flash(e, "danger")
-
+        for exc in errores:
+            flash(exc, "danger")
+    
     return render_template("configuracion/categoria_form.html", item=item if item else None)
 
 
@@ -109,11 +109,11 @@ def categoria_editar(id):
                 )
                 flash("Categoría actualizada correctamente.", "success")
                 return redirect(url_for("configuracion.listar"))
-            except DatabaseError as e:
-                errores.append(error_message(e))
+            except DatabaseError as exc:
+                errores.append(error_message(exc))
                 
-        for e in errores:
-            flash(e, "danger")
+        for exc in errores:
+            flash(exc, "danger")
 
     return render_template("configuracion/categoria_form.html", item=item)
 
@@ -121,10 +121,12 @@ def categoria_editar(id):
 @bp.route("/categoria/eliminar/<int:id>", methods=["POST"])
 def categoria_eliminar(id):
     try:
-        execute("DELETE FROM categorias WHERE id_categoria = %s", (id,))
-        flash("Categoría eliminada.", "success")
-    except DatabaseError as e:
-        flash(error_message(e), "danger")
+        if execute("DELETE FROM categorias WHERE id_categoria = %s", (id,)):
+            flash("Categoría eliminada.", "success")
+        else:
+            flash("La categoría no existe.", "warning")
+    except DatabaseError as exc:
+        flash(error_message(exc), "danger")
 
     return redirect(url_for("configuracion.listar"))
 
@@ -146,11 +148,11 @@ def nuevo():
                 )
                 flash("Tipo de documento creado correctamente.", "success")
                 return redirect(url_for("configuracion.listar"))
-            except DatabaseError as e:
-                errores.append(error_message(e))
+            except DatabaseError as exc:
+                errores.append(error_message(exc))
                 
-        for e in errores:
-            flash(e, "danger")
+        for exc in errores:
+            flash(exc, "danger")
 
     return render_template("configuracion/form.html", item=item if item else None)
 
@@ -181,11 +183,11 @@ def editar(id):
                 )
                 flash("Tipo de documento actualizado correctamente.", "success")
                 return redirect(url_for("configuracion.listar"))
-            except DatabaseError as e:
-                errores.append(error_message(e))
+            except DatabaseError as exc:
+                errores.append(error_message(exc))
 
-        for e in errores:
-            flash(e, "danger")
+        for exc in errores:
+            flash(exc, "danger")
 
     return render_template("configuracion/form.html", item=item)
 
@@ -193,9 +195,10 @@ def editar(id):
 @bp.route("/eliminar/<int:id>", methods=["POST"])
 def eliminar(id):
     try:
-        execute("DELETE FROM tipo_documento WHERE id_tipo_documento = %s", (id,))
+       if execute("DELETE FROM tipo_documento WHERE id_tipo_documento = %s", (id,)):
         flash("Tipo de documento eliminado.", "success")
-    except DatabaseError as e:
-        flash(error_message(e), "danger")
-
+       else:
+        flash("El tipo de documento no existe.", "warning")
+    except DatabaseError as exc:
+        flash(error_message(exc), "danger")
     return redirect(url_for("configuracion.listar"))
