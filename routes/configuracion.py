@@ -42,14 +42,13 @@ def listar():
         SELECT td.id_tipo_documento AS id_configuracion,
                td.sigla,
                td.descripcion,
-               COUNT(c.id_cliente)+COUNT(v.id_vendedor) AS usado_por
+               COUNT(DISTINCT c.id_cliente) + COUNT(DISTINCT v.id_vendedor) AS usado_por
         FROM tipo_documento td
         LEFT JOIN clientes c ON c.id_tipo_documento = td.id_tipo_documento
         LEFT JOIN vendedores v ON v.id_tipo_documento = td.id_tipo_documento
         GROUP BY td.id_tipo_documento, td.sigla, td.descripcion
         ORDER BY td.sigla
     """)
-
     categorias = query("""
         SELECT ct.id_categoria,
                ct.nombre_categoria,
