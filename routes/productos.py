@@ -7,8 +7,9 @@ bp = Blueprint("productos", __name__, url_prefix="/productos")
 
 def _leer_formulario(form):
     errores = []
+    nombre = v.texto(form, "nombre_producto", "Nombre del producto", errores, max_len=100)
     datos = {
-        "nombre_producto": v.texto(form, "nombre_producto", "Nombre", errores, max_len=100),
+        "nombre_producto": nombre.upper() if nombre else nombre,
         "id_categoria": v.entero(form, "id_categoria", "Categoría", errores, minimo=1),
         "precio_venta": v.decimal(form, "precio_venta", "Precio de venta", errores, mayor_que=0),
     }
