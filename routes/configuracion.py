@@ -9,7 +9,7 @@ bp = Blueprint("configuracion", __name__, url_prefix="/configuracion")
 def _leer_formulario_categoria(form):
     errores = []
     
-    nombre = v.texto(form, "nombre_categoria", "Nombre de la categoría", errores, max_len=100)
+    nombre = v.texto(form, "nombre_categoria", "Nombre de la categoría", errores, max_len=50)
     
     datos = {
         "nombre_categoria": nombre.upper() if nombre else nombre

@@ -173,43 +173,40 @@ la página `/` con las tarjetas de ventas del día, ventas totales y pedidos tot
 
 ### 4. Integridad de los datos
 
-**Posible captura:** el aviso que aparece al intentar eliminar un cliente que ya tiene pedidos («el registro está relacionado con otros datos…»). Demuestra que la base de datos protege la información.
-<!-- ![Aviso de integridad referencial](images/capturas/04-error-integridad.png) -->
+el aviso que aparece al intentar eliminar un cliente que ya tiene pedidos («el registro está relacionado con otros datos…»). Demuestra que la base de datos protege la información.
+[Aviso de integridad referencial](images/capturas/04-error-integridad.png)
 
-### 5. Listado de pedidos
+### 5. Armado de un pedido
 
-**Posible captura:** `/pedidos/` con las tarjetas de pedidos de hoy, ventas del día y ventas totales, y la tabla con cliente, vendedor y total.
-<!-- ![Listado de pedidos](images/capturas/05-pedidos-lista.png) -->
+la pantalla de detalle de un pedido con varios productos agregados, el subtotal de cada línea y el total.
+[Detalle de un pedido](images/capturas/05-pedido-detalle.png)
 
-### 6. Armado de un pedido
+### 6. Productos
 
-**Posible captura:** la pantalla de detalle de un pedido con varios productos agregados, el subtotal de cada línea y el total.
-<!-- ![Detalle de un pedido](images/capturas/06-pedido-detalle.png) -->
+`/productos/` con categoría y precio en pesos de cada producto.
+[Listado de productos](images/capturas/06-productos.png)
+[Nuevo producto](images/capturas/06-2-nuevo_producto.png)
 
-### 7. Productos
+### 7. Vendedores
 
-**Posible captura:** `/productos/` con categoría y precio en pesos de cada producto.
-<!-- ![Listado de productos](images/capturas/07-productos.png) -->
+`/vendedores/` con las tarjetas de pedidos atendidos hoy y mejor vendedor, y la columna de total vendido.
+[Listado de vendedores](images/capturas/07-vendedores.png)
 
-### 8. Vendedores
+### 8. Insumos
 
-**Posible captura:** `/vendedores/` con las tarjetas de pedidos atendidos hoy y mejor vendedor, y la columna de total vendido.
-<!-- ![Listado de vendedores](images/capturas/08-vendedores.png) -->
-
-### 9. Insumos
-
-**Posible captura:** `/insumos/` con el stock de cada insumo y la tarjeta del insumo con menos existencias.
-<!-- ![Listado de insumos](images/capturas/09-insumos.png) -->
+`/insumos/` con el stock de cada insumo y la tarjeta del insumo con menos existencias.
+[Listado de insumos](images/capturas/08-insumos.png)
 
 ### 10. Configuración
 
-**Posible captura:** `/configuracion/` con la tabla de tipos de documento (columna «Usado por») y la tabla de categorías (columna «Productos»).
-<!-- ![Configuración](images/capturas/10-configuracion.png) -->
+`/configuracion/` con la tabla de tipos de documento (columna «Usado por») y la tabla de categorías (columna «Productos»).
+[Configuración](images/capturas/09-configuracion.png)
+[categoria](images/capturas/09-2-categoria.png)
 
 ### 11. Pruebas automáticas
 
-**Posible captura:** la terminal después de ejecutar `python -m pytest -v`, con el resumen de pruebas pasadas.
-<!-- ![Pruebas automáticas](images/capturas/11-pruebas.png) -->
+la terminal después de ejecutar `python -m pytest -v`, con el resumen de pruebas pasadas.
+[Pruebas automáticas](images/capturas/10-pytest.png)
 
 ## Qué hace cada pantalla
 

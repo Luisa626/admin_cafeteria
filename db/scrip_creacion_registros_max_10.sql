@@ -1,90 +1,90 @@
 -- ============================================================================
--- SCRIPT DE CARGA INICIAL (SEED) — admin_cafeteria_db
--- Mínimo 10 registros por tabla respetando integridad referencial
+-- SCRIPT DE CARGA INICIAL (SEED) — ADMIN_CAFETERIA_DB
+-- MÍNIMO 10 REGISTROS POR TABLA RESPETANDO INTEGRIDAD REFERENCIAL
 -- ============================================================================
 
 BEGIN;
 
--- 1. TIPO_DOCUMENTO (10 registros)
-INSERT INTO tipo_documento (sigla, descripcion) VALUES
-('CC',    'Cédula de Ciudadanía'),
-('TI',    'Tarjeta de Identidad'),
-('CE',    'Cédula de Extranjería'),
-('NIT',   'Número de Identificación Tributaria'),
-('PA',    'Pasaporte'),
-('PPT',   'Permiso por Protección Temporal'),
-('PEP',   'Permiso Especial de Permanencia'),
-('RC',    'Registro Civil de Nacimiento'),
-('DIE',   'Documento de Identificación Extranjero'),
-('NUIP',  'Número Único de Identificación Personal');
+-- 1. TIPO_DOCUMENTO (10 REGISTROS)
+INSERT INTO TIPO_DOCUMENTO (SIGLA, DESCRIPCION) VALUES
+('CC',    'CÉDULA DE CIUDADANÍA'),
+('TI',    'TARJETA DE IDENTIDAD'),
+('CE',    'CÉDULA DE EXTRANJERÍA'),
+('NIT',   'NÚMERO DE IDENTIFICACIÓN TRIBUTARIA'),
+('PA',    'PASAPORTE'),
+('PPT',   'PERMISO POR PROTECCIÓN TEMPORAL'),
+('PEP',   'PERMISO ESPECIAL DE PERMANENCIA'),
+('RC',    'REGISTRO CIVIL DE NACIMIENTO'),
+('DIE',   'DOCUMENTO DE IDENTIFICACIÓN EXTRANJERO'),
+('NUIP',  'NÚMERO ÚNICO DE IDENTIFICACIÓN PERSONAL');
 
--- 2. CATEGORIAS (10 registros)
-INSERT INTO categorias (nombre_categoria) VALUES
-('Bebidas Calientes'),
-('Bebidas Frías'),
-('Panadería'),
-('Repostería y Pastelería'),
-('Sándwiches y Wraps'),
-('Desayunos'),
-('Postres Fríos'),
-('Jugos y Batidos'),
-('Snacks y Mecato'),
-('Café en Grano y Molido');
+-- 2. CATEGORIAS (10 REGISTROS)
+INSERT INTO CATEGORIAS (NOMBRE_CATEGORIA) VALUES
+('BEBIDAS CALIENTES'),
+('BEBIDAS FRÍAS'),
+('PANADERÍA'),
+('REPOSTERÍA Y PASTELERÍA'),
+('SÁNDWICHES Y WRAPS'),
+('DESAYUNOS'),
+('POSTRES FRÍOS'),
+('JUGOS Y BATIDOS'),
+('SNACKS Y MECATO'),
+('CAFÉ EN GRANO Y MOLIDO');
 
--- 3. INSUMOS (10 registros)
-INSERT INTO insumos (nombre_insumo, unidad_medida, stock_actual) VALUES
-('Café excelso molido',      'kg',  25.50),
-('Leche entera',             'L',   40.00),
-('Leche deslactosada',       'L',   30.00),
-('Azúcar refinada',          'kg',  20.00),
-('Panela pulverizada',       'kg',  15.00),
-('Chocolate de mesa',        'kg',  12.50),
-('Harina de trigo',          'kg',  35.00),
-('Queso campesino',          'kg',  10.00),
-('Vasos desechables 9 oz',   'und', 500.00),
-('Servilletas de papel',     'und', 1000.00);
+-- 3. INSUMOS (10 REGISTROS)
+INSERT INTO INSUMOS (NOMBRE_INSUMO, UNIDAD_MEDIDA, STOCK_ACTUAL) VALUES
+('CAFÉ EXCELSO MOLIDO',      'KG',  25.50),
+('LECHE ENTERA',             'L',   40.00),
+('LECHE DESLACTOSADA',       'L',   30.00),
+('AZÚCAR REFINADA',          'KG',  20.00),
+('PANELA PULVERIZADA',       'KG',  15.00),
+('CHOCOLATE DE MESA',        'KG',  12.50),
+('HARINA DE TRIGO',          'KG',  35.00),
+('QUESO CAMPESINO',          'KG',  10.00),
+('VASOS DESECHABLES 9 OZ',   'UND', 500.00),
+('SERVILLETAS DE PAPEL',     'UND', 1000.00);
 
--- 4. CLIENTES (10 registros)
-INSERT INTO clientes (id_tipo_documento, documento, nombre_cliente, apellido_cliente, telefono, email) VALUES
-(1, 107521001, 'Carlos',    'Ramírez',   '3102001001', 'carlos.ramirez@correo.com'),
-(1, 107521002, 'Laura',     'Gómez',     '3112001002', 'laura.gomez@correo.com'),
-(1, 107521003, 'Andrés',    'Martínez',  '3122001003', 'andres.martinez@correo.com'),
-(2, 107521004, 'Sofía',     'Hernández', '3132001004', 'sofia.hernandez@correo.com'),
-(1, 107521005, 'Diego',     'López',     '3142001005', 'diego.lopez@correo.com'),
-(3, 107521006, 'Valentina', 'Torres',    '3152001006', 'valentina.torres@correo.com'),
-(1, 107521007, 'Mateo',     'Vargas',    '3162001007', 'mateo.vargas@correo.com'),
-(4, 900123456, 'Inversiones Huila SAS', 'Comercial', '6088701008', 'compras@invhuila.com'),
-(1, 107521009, 'Camila',    'Rojas',     '3182001009', 'camila.rojas@correo.com'),
-(5, 107521010, 'Sebastián', 'Morales',   '3202001010', 'sebastian.morales@correo.com');
+-- 4. CLIENTES (10 REGISTROS)
+INSERT INTO CLIENTES (ID_TIPO_DOCUMENTO, DOCUMENTO, NOMBRE_CLIENTE, APELLIDO_CLIENTE, TELEFONO, EMAIL) VALUES
+(1, 107521001, 'CARLOS',    'RAMÍREZ',   '3102001001', 'CARLOS.RAMIREZ@CORREO.COM'),
+(1, 107521002, 'LAURA',     'GÓMEZ',     '3112001002', 'LAURA.GOMEZ@CORREO.COM'),
+(1, 107521003, 'ANDRÉS',    'MARTÍNEZ',  '3122001003', 'ANDRES.MARTINEZ@CORREO.COM'),
+(2, 107521004, 'SOFÍA',     'HERNÁNDEZ', '3132001004', 'SOFIA.HERNANDEZ@CORREO.COM'),
+(1, 107521005, 'DIEGO',     'LÓPEZ',     '3142001005', 'DIEGO.LOPEZ@CORREO.COM'),
+(3, 107521006, 'VALENTINA', 'TORRES',    '3152001006', 'VALENTINA.TORRES@CORREO.COM'),
+(1, 107521007, 'MATEO',     'VARGAS',    '3162001007', 'MATEO.VARGAS@CORREO.COM'),
+(4, 900123456, 'INVERSIONES HUILA SAS', 'COMERCIAL', '6088701008', 'COMPRAS@INVHUILA.COM'),
+(1, 107521009, 'CAMILA',    'ROJAS',     '3182001009', 'CAMILA.ROJAS@CORREO.COM'),
+(5, 107521010, 'SEBASTIÁN', 'MORALES',   '3202001010', 'SEBASTIAN.MORALES@CORREO.COM');
 
--- 5. VENDEDORES (10 registros)
-INSERT INTO vendedores (id_tipo_documento, documento, nombre_vendedor, apellido_vendedor, telefono, email) VALUES
-(1, 108110001, 'María',     'Rojas',     '3003002001', 'maria.rojas@miaucafe.com'),
-(1, 108110002, 'Oscar',     'Horta',     '3003002002', 'oscar.horta@miaucafe.com'),
-(1, 108110003, 'Daniela',   'Castro',    '3003002003', 'daniela.castro@miaucafe.com'),
-(1, 108110004, 'Julián',    'Mendoza',   '3003002004', 'julian.mendoza@miaucafe.com'),
-(1, 108110005, 'Paula',     'Ortiz',     '3003002005', 'paula.ortiz@miaucafe.com'),
-(1, 108110006, 'Felipe',    'Suárez',    '3003002006', 'felipe.suarez@miaucafe.com'),
-(1, 108110007, 'Natalia',   'Paredes',   '3003002007', 'natalia.paredes@miaucafe.com'),
-(3, 108110008, 'Alejandro', 'Silva',     '3003002008', 'alejandro.silva@miaucafe.com'),
-(1, 108110009, 'Tatiana',   'Ríos',      '3003002009', 'tatiana.rios@miaucafe.com'),
-(1, 108110010, 'Cristian',  'Peña',      '3003002010', 'cristian.pena@miaucafe.com');
+-- 5. VENDEDORES (10 REGISTROS)
+INSERT INTO VENDEDORES (ID_TIPO_DOCUMENTO, DOCUMENTO, NOMBRE_VENDEDOR, APELLIDO_VENDEDOR, TELEFONO, EMAIL) VALUES
+(1, 108110001, 'MARÍA',     'ROJAS',     '3003002001', 'MARIA.ROJAS@MIAUCAFE.COM'),
+(1, 108110002, 'OSCAR',     'HORTA',     '3003002002', 'OSCAR.HORTA@MIAUCAFE.COM'),
+(1, 108110003, 'DANIELA',   'CASTRO',    '3003002003', 'DANIELA.CASTRO@MIAUCAFE.COM'),
+(1, 108110004, 'JULIÁN',    'MENDOZA',   '3003002004', 'JULIAN.MENDOZA@MIAUCAFE.COM'),
+(1, 108110005, 'PAULA',     'ORTIZ',     '3003002005', 'PAULA.ORTIZ@MIAUCAFE.COM'),
+(1, 108110006, 'FELIPE',    'SUÁREZ',    '3003002006', 'FELIPE.SUAREZ@MIAUCAFE.COM'),
+(1, 108110007, 'NATALIA',   'PAREDES',   '3003002007', 'NATALIA.PAREDES@MIAUCAFE.COM'),
+(3, 108110008, 'ALEJANDRO', 'SILVA',     '3003002008', 'ALEJANDRO.SILVA@MIAUCAFE.COM'),
+(1, 108110009, 'TATIANA',   'RÍOS',      '3003002009', 'TATIANA.RIOS@MIAUCAFE.COM'),
+(1, 108110010, 'CRISTIAN',  'PEÑA',      '3003002010', 'CRISTIAN.PENA@MIAUCAFE.COM');
 
--- 6. PRODUCTOS (10 registros)
-INSERT INTO productos (nombre_producto, precio_venta, id_categoria) VALUES
-('Café Americano',          4500.00,  1),
-('Capuchino Tradicional',   6500.00,  1),
-('Latte Vainilla Frío',     7500.00,  2),
-('Croissant de Mantequilla',5000.00,  3),
-('Torta de Zanahoria',      7000.00,  4),
-('Sándwich Jamón y Queso',  9500.00,  5),
-('Huevos al Gusto con Pan', 11000.00, 6),
-('Cheesecake de Maracuyá',  8500.00,  7),
-('Jugo Natural en Leche',   6000.00,  8),
-('Bolsa Café Origen 500g',  28000.00, 10);
+-- 6. PRODUCTOS (10 REGISTROS)
+INSERT INTO PRODUCTOS (NOMBRE_PRODUCTO, PRECIO_VENTA, ID_CATEGORIA) VALUES
+('CAFÉ AMERICANO',          4500.00,  1),
+('CAPUCHINO TRADICIONAL',   6500.00,  1),
+('LATTE VAINILLA FRÍO',     7500.00,  2),
+('CROISSANT DE MANTEQUILLA',5000.00,  3),
+('TORTA DE ZANAHORIA',      7000.00,  4),
+('SÁNDWICH JAMÓN Y QUESO',  9500.00,  5),
+('HUEVOS AL GUSTO CON PAN', 11000.00, 6),
+('CHEESECAKE DE MARACUYÁ',  8500.00,  7),
+('JUGO NATURAL EN LECHE',   6000.00,  8),
+('BOLSA CAFÉ ORIGEN 500G',  28000.00, 10);
 
--- 7. PEDIDOS (10 registros)
-INSERT INTO pedidos (id_cliente, id_vendedor, fecha_compra) VALUES
+-- 7. PEDIDOS (10 REGISTROS)
+INSERT INTO PEDIDOS (ID_CLIENTE, ID_VENDEDOR, FECHA_COMPRA) VALUES
 (1,  1, '2026-11-10 08:15:00'),
 (2,  2, '2026-11-10 09:30:00'),
 (3,  3, '2026-11-11 10:05:00'),
@@ -96,8 +96,8 @@ INSERT INTO pedidos (id_cliente, id_vendedor, fecha_compra) VALUES
 (9,  7, '2026-11-15 17:30:00'),
 (10, 8, '2026-11-16 14:40:00');
 
--- 8. DETALLE_PEDIDOS (12 registros vinculados a los 10 pedidos y 10 productos)
-INSERT INTO detalle_pedidos (id_pedido, id_producto, cantidad, precio_unitario) VALUES
+-- 8. DETALLE_PEDIDOS (12 REGISTROS VINCULADOS A LOS 10 PEDIDOS Y 10 PRODUCTOS)
+INSERT INTO DETALLE_PEDIDOS (ID_PEDIDO, ID_PRODUCTO, CANTIDAD, PRECIO_UNITARIO) VALUES
 (1,  1, 2, 4500.00),
 (1,  4, 1, 5000.00),
 (2,  2, 1, 6500.00),

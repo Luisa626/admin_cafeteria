@@ -267,7 +267,7 @@ def test_crud_productos(client, categoria):
     r = client.post("/productos/nuevo", data=datos, follow_redirects=True)
     assert "Producto creado correctamente" in html(r)
     id_, precio = sql("SELECT id_producto, precio_venta FROM productos WHERE nombre_producto=%s",
-                      (PREFIJO + "Prod",))
+                      ((PREFIJO + "Prod").upper(),))
     assert float(precio) == 12345.50
 
     r = client.post(f"/productos/{id_}/editar", data={**datos, "precio_venta": "999"},
@@ -284,7 +284,7 @@ def test_producto_valores_invalidos(client):
     r = client.post("/productos/nuevo", data={"nombre_producto": "", "id_categoria": "",
                                               "precio_venta": "-5"})
     texto = html(r)
-    assert "«Nombre» es obligatorio" in texto
+    assert "«Nombre del producto» es obligatorio" in texto
     assert "«Categoría» es obligatorio" in texto
     assert "mayor que 0" in texto
 
@@ -398,7 +398,7 @@ def test_crud_insumos(client):
     r = client.post("/insumos/nuevo", data=datos, follow_redirects=True)
     assert "Insumo creado correctamente" in html(r)
     id_, unidad, stock = sql("""SELECT id_insumo, unidad_medida, stock_actual
-                                  FROM insumos WHERE nombre_insumo=%s""", (PREFIJO + "Ins",))
+                                  FROM insumos WHERE nombre_insumo=%s""", ((PREFIJO + "Ins").upper(),))
     assert unidad == "kg" and float(stock) == 12.5
 
     # el formulario de edición deja marcada la unidad guardada
@@ -419,7 +419,7 @@ def test_insumo_valores_invalidos(client):
     r = client.post("/insumos/nuevo", data={"nombre_insumo": "", "unidad_medida": "toneladas",
                                             "stock_actual": "-1"})
     texto = html(r)
-    assert "«Nombre» es obligatorio" in texto
+    assert "«Nombre del insumo» es obligatorio" in texto
     assert "Unidad de medida no válida" in texto
     assert "mayor o igual a 0" in texto
 
@@ -434,7 +434,7 @@ def test_insumo_stock_no_numerico_ni_fuera_de_rango(client):
 
 def test_insumo_acepta_coma_decimal(client):
     client.post("/insumos/nuevo", data=datos_insumo(stock_actual="2,5"), follow_redirects=True)
-    stock = sql("SELECT stock_actual FROM insumos WHERE nombre_insumo=%s", (PREFIJO + "Ins",))[0]
+    stock = sql("SELECT stock_actual FROM insumos WHERE nombre_insumo=%s", ((PREFIJO + "Ins").upper(),))[0]
     assert float(stock) == 2.5
 
 
@@ -442,7 +442,7 @@ def test_listado_insumos(client):
     client.post("/insumos/nuevo", data=datos_insumo(nombre_insumo=PREFIJO + "Ins_A"))
     client.post("/insumos/nuevo", data=datos_insumo(nombre_insumo=PREFIJO + "Ins_B"))
     texto = html(client.get("/insumos/"))
-    assert PREFIJO + "Ins_A" in texto and PREFIJO + "Ins_B" in texto
+    assert (PREFIJO + "Ins_A").upper() in texto and (PREFIJO + "Ins_B").upper() in texto
 
 
 # ================================================================== pedidos
@@ -646,25 +646,26 @@ def test_configuracion_crud_categoria(client):
     r = client.post("/configuracion/categoria/crear",
                     data={"nombre_categoria": PREFIJO + "CatX"}, follow_redirects=True)
     assert "Categoría creada correctamente" in html(r)
-    id_ = sql("SELECT id_categoria FROM categorias WHERE nombre_categoria=%s", (PREFIJO + "CatX",))[0]
+    id_ = sql("SELECT id_categoria FROM categorias WHERE nombre_categoria=%s", ((PREFIJO + "CatX").upper(),))[0]
 
-    assert PREFIJO + "CatX" in html(client.get(f"/configuracion/categoria/editar/{id_}"))
+    assert (PREFIJO + "CatX").upper() in html(client.get(f"/configuracion/categoria/editar/{id_}"))
 
     r = client.post(f"/configuracion/categoria/editar/{id_}",
                     data={"nombre_categoria": PREFIJO + "CatY"}, follow_redirects=True)
     assert "Categoría actualizada correctamente" in html(r)
     assert sql("SELECT nombre_categoria FROM categorias WHERE id_categoria=%s",
-               (id_,))[0] == PREFIJO + "CatY"
+               (id_,))[0] == (PREFIJO + "CatY").upper()
 
     r = client.post(f"/configuracion/categoria/eliminar/{id_}", follow_redirects=True)
     assert "Categoría eliminada" in html(r)
     assert sql("SELECT COUNT(*) FROM categorias WHERE id_categoria=%s", (id_,))[0] == 0
 
 
-def test_configuracion_categoria_duplicada_y_vacia(client, categoria):
-    r = client.post("/configuracion/categoria/crear", data={"nombre_categoria": PREFIJO + "Cat"})
+def test_configuracion_categoria_duplicada_y_vacia(client):
+    client.post("/configuracion/categoria/crear", data={"nombre_categoria": PREFIJO + "Cat"}, follow_redirects=True)
+    r = client.post("/configuracion/categoria/crear", data={"nombre_categoria": PREFIJO + "Cat"}, follow_redirects=True)
     assert "Ya existe un registro" in html(r)
-    r = client.post("/configuracion/categoria/crear", data={"nombre_categoria": "   "})
+    r = client.post("/configuracion/categoria/crear", data={"nombre_categoria": "   "}, follow_redirects=True)
     assert "El campo «Nombre de la categoría» es obligatorio." in html(r)
 
 
