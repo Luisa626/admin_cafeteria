@@ -45,7 +45,7 @@ def create_app():
             SELECT p.id_pedido, p.fecha_compra,
                 c.nombre_cliente,
                 c.apellido_cliente,
-                v.nombre_vendedo,
+                v.nombre_vendedor,
                 v.apellido_vendedor,
                 COALESCE(SUM(d.cantidad * d.precio_unitario), 0) AS total
             FROM pedidos p
