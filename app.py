@@ -43,8 +43,10 @@ def create_app():
         
         pedidos_recientes = db.query("""
             SELECT p.id_pedido, p.fecha_compra,
-                c.nombre_cliente AS cliente,
-                v.nombre_vendedor AS vendedor,
+                c.nombre_cliente,
+                c.apellido_cliente,
+                v.nombre_vendedo,
+                v.apellido_vendedor,
                 COALESCE(SUM(d.cantidad * d.precio_unitario), 0) AS total
             FROM pedidos p
             JOIN clientes c   ON c.id_cliente = p.id_cliente

@@ -40,8 +40,8 @@
                 {% for pedidos in pedidos %}
                 <tr>
                 <td class="text-center">#{{ pedidos.id_pedido }}</td>
-                <td class="fw-medium">{{ pedidos.cliente }}</td>
-                <td class="fw-medium">{{ pedidos.vendedor }}</td>
+                <td class="fw-medium">{{ pedidos.nombre_cliente }} {{ pedidos.apellido_cliente }}</td>
+                <td class="fw-medium">{{ pedidos.nombre_vendedor }} {{ pedidos.apellido_vendedor }}</td>
                 <td class="text-center">{{ pedidos.total|pesos }}</td>
                 <td>
                     <a href="{{ url_for('pedidos.ver', id_pedido=pedidos.id_pedido) }}"
