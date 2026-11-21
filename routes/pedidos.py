@@ -134,7 +134,6 @@ def agregar(id_pedido):
         flash("Elige un producto y una cantidad válida (mínimo 1).", "danger")
         return redirect(url_for("pedidos.detalle", id_pedido=id_pedido))
     try:
-        # El precio se toma de la base de datos, no del formulario
         execute("""INSERT INTO detalle_pedidos (id_pedido, id_producto, cantidad, precio_unitario)
                    SELECT %s, id_producto, %s, precio_venta
                      FROM productos WHERE id_producto = %s""",
@@ -154,7 +153,6 @@ def quitar(id_pedido, id_detalle):
     return redirect(url_for("pedidos.detalle", id_pedido=id_pedido))
 
 
-# ---------- editar cliente/vendedor y eliminar ----------
 @bp.route("/<int:id>/editar", methods=["GET", "POST"])
 def editar(id):
     item = query("SELECT * FROM pedidos WHERE id_pedido = %s", (id,), one=True)
