@@ -14,7 +14,7 @@
           {% for tp in tipo_documento %}
             <option value="{{ tp.id_tipo_documento }}" 
             {{ 'selected' if item.id_tipo_documento|string == tp.id_tipo_documento|string }}>
-            {{ tp.sigla }}</option>
+            {{ tp.sigla }} - {{ tp.descripcion }}</option>
           {% endfor %}
         </select>
       </div>

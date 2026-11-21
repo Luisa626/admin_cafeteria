@@ -20,7 +20,7 @@ def _leer_formulario(form):
     return datos, errores
 
 def _tipo_documento():
-    return query("SELECT id_tipo_documento, sigla FROM tipo_documento ORDER BY sigla")
+    return query("SELECT id_tipo_documento, sigla, descripcion FROM tipo_documento ORDER BY sigla")
 
 def _render_form(item, titulo):
     return render_template("vendedores/form.html", item=item, titulo=titulo,
