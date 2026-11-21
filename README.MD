@@ -159,55 +159,55 @@ Abre **http://127.0.0.1:5000**
 ### 1. Panel de inicio
 
 la página `/` con las tarjetas de ventas del día, ventas totales y pedidos totales, y la tabla de pedidos y productos más vendidos del día.
-[Panel de inicio](images/capturas/01-inicio.png)
+[Panel de inicio](images/Capturas/01-inicio.png)
 
 ### 2. Listado de clientes
 
 `/clientes/` con las tarjetas «Nuevos este mes» y «Cliente más frecuente» y la tabla con cliente, documento, telefono .... tambien en la misma tabla los botones de editar y borrar
-[Listado de clientes](images/capturas/02-clientes-lista.png)
+[Listado de clientes](images/Capturas/02-clientes-lista.png)
 
 ### 3. Formulario de cliente
 
 `/clientes/nuevo` con la lista desplegable de tipo de documento.
-[Formulario de cliente](images/capturas/03-clientes-formulario.png)
-[validaciones de formulario de cliente](images/capturas/03-2-validaciones-formulario.png)
+[Formulario de cliente](images/Capturas/03-clientes-formulario.png)
+[validaciones de formulario de cliente](images/Capturas/03-2-validaciones-formulario.png)
 
 ### 4. Integridad de los datos
 
 el aviso que aparece al intentar eliminar un cliente que ya tiene pedidos («el registro está relacionado con otros datos…»). Demuestra que la base de datos protege la información.
-[Aviso de integridad referencial](images/capturas/04-error-integridad.png)
+[Aviso de integridad referencial](images/Capturas/04-error-integridad.png)
 
 ### 5. Armado de un pedido
 
 la pantalla de detalle de un pedido con varios productos agregados, el subtotal de cada línea y el total.
-[Detalle de un pedido](images/capturas/05-pedido-detalle.png)
+[Detalle de un pedido](images/Capturas/05-pedido-detalle.png)
 
 ### 6. Productos
 
 `/productos/` con categoría y precio en pesos de cada producto.
-[Listado de productos](images/capturas/06-productos.png)
-[Nuevo producto](images/capturas/06-2-nuevo_producto.png)
+[Listado de productos](images/Capturas/06-productos.png)
+[Nuevo producto](images/Capturas/06-2-nuevo_producto.png)
 
 ### 7. Vendedores
 
 `/vendedores/` con las tarjetas de pedidos atendidos hoy y mejor vendedor, y la columna de total vendido.
-[Listado de vendedores](images/capturas/07-vendedores.png)
+[Listado de vendedores](images/Capturas/07-vendedores.png)
 
 ### 8. Insumos
 
 `/insumos/` con el stock de cada insumo y la tarjeta del insumo con menos existencias.
-[Listado de insumos](images/capturas/08-insumos.png)
+[Listado de insumos](images/Capturas/08-insumos.png)
 
 ### 10. Configuración
 
 `/configuracion/` con la tabla de tipos de documento (columna «Usado por») y la tabla de categorías (columna «Productos»).
-[Configuración](images/capturas/09-configuracion.png)
-[categoria](images/capturas/09-2-categoria.png)
+[Configuración](images/Capturas/09-configuracion.png)
+[categoria](images/Capturas/09-2-categoria.png)
 
 ### 11. Pruebas automáticas
 
 la terminal después de ejecutar `python -m pytest -v`, con el resumen de pruebas pasadas.
-[Pruebas automáticas](images/capturas/10-pytest.png)
+[Pruebas automáticas](images/Capturas/10-pytest.png)
 
 ## Qué hace cada pantalla
 
