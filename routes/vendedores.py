@@ -30,10 +30,8 @@ def _render_form(item, titulo):
 def listar():
     items = query("""
         SELECT 
-            v.id_vendedor,
-            CONCAT(v.nombre_vendedor, ' ', v.apellido_vendedor) AS vendedor,
-            CONCAT(td.sigla, ' ', v.documento) AS documento_completo,
-            v.telefono,
+            v.id_vendedor, v.nombre_vendedor, v.apellido_vendedor, td.sigla, 
+            v.documento,v.telefono,
             v.email AS correo,
             COALESCE(SUM(dp.cantidad * dp.precio_unitario), 0) AS total_vendido
         FROM vendedores v

@@ -28,15 +28,17 @@
     <table class="table table-hover align-middle mb-0">
         <thead>
          <tr>
-            <th>Vendedor</th><th>Documento</th><th>Teléfono</th><th>Correo</th>
+            <th>Nombre</th><th>Apellido</th><th>Tipo</th><th>Documento</th><th>Teléfono</th><th>Correo</th>
             <th class="text-center">Total vendido</th><th></th>
             </tr>
         </thead>
         <tbody>
             {% for pr in items %}
             <tr>
-                <td class="fw-medium">{{ pr.vendedor }}</td>
-                <td>{{ pr.documento_completo }}</td>
+                <td class="fw-medium">{{ pr.nombre_vendedor }}</td>
+                <td class ="fw-medium">{{ pr.apellido_vendedor }}</td>
+                <td>{{ pr.sigla }}</td>
+                <td>{{ pr.documento }}</td>
                 <td>{{ pr.telefono or '' }}</td>
                 <td>{% if pr.correo %}<a href="mailto:{{ pr.email }}">{{ pr.correo }}</a>{% endif %}</td>
                 <td class="text-center">{{ pr.total_vendido|pesos }}</td>
