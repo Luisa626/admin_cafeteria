@@ -14,14 +14,16 @@ UNIDADES = ["kg", "lb", "g", "mL", "L", "und"]
 
 def _leer_formulario(form):
     errores = []
+    nombre = v.texto(form, "nombre_insumo", "Nombre del insumo", errores, max_len=100)
     datos = {
-        "nombre_insumo": v.texto(form, "nombre_insumo", "Nombre", errores, max_len=100),
+        "nombre_insumo": nombre.upper() if nombre else nombre,
         "unidad_medida": v.texto(form, "unidad_medida", "Unidad de medida", errores, max_len=20),
         "stock_actual": v.decimal(form, "stock_actual", "Stock", errores,
                                   minimo=0, maximo=STOCK_MAX),
     }
     if datos["unidad_medida"] and datos["unidad_medida"] not in UNIDADES:
         errores.append("Unidad de medida no válida.")
+
     return datos, errores
 
 def _render_form(item, titulo):
