@@ -153,17 +153,3 @@ ALTER TABLE IF EXISTS public.vendedores
     REFERENCES public.tipo_documento (id_tipo_documento) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE RESTRICT;
-
--- Relacion clientes-vendedroes -> tipo_documento
-CREATE INDEX IF NOT EXISTS idx_clientes_tipo_doc ON public.clientes (id_tipo_documento);
-CREATE INDEX IF NOT EXISTS idx_vendedores_tipo_doc ON public.vendedores (id_tipo_documento);
--- Relacion productos -> categorias
-CREATE INDEX IF NOT EXISTS idx_productos_categoria ON public.productos (id_categoria);
--- Relaciones de la cabecera de pedidos
-CREATE INDEX IF NOT EXISTS idx_pedidos_cliente ON public.pedidos (id_cliente);
-CREATE INDEX IF NOT EXISTS idx_pedidos_vendedor ON public.pedidos (id_vendedor);
--- Relaciones del detalle de pedidos
-CREATE INDEX IF NOT EXISTS idx_detalle_pedidos_pedido ON public.detalle_pedidos (id_pedido);
-CREATE INDEX IF NOT EXISTS idx_detalle_pedidos_producto ON public.detalle_pedidos (id_producto);
--- Filtrar o consultar ventas por fecha/rango de fechas
-CREATE INDEX IF NOT EXISTS idx_pedidos_fecha ON public.pedidos (fecha_compra);
