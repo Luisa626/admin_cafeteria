@@ -257,7 +257,7 @@ python -m pytest -v -k "validators or error_message or formato_pesos"
 - **Dinero y cantidades con `Decimal`**, no `float`, para evitar errores de redondeo.
 
 ## Alcance y limitaciones
-i
+
 - La aplicación no tiene inicio de sesión ni roles de usuario.
 - Los formularios no incluyen token CSRF.
 - Los insumos no están relacionados con los productos ni descuentan stock al vender.
