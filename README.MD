@@ -85,6 +85,7 @@ admin_cafeteria/
 ├── docs/                  # MER, diccionario de datos y plan de pruebas
 ├── images/
 │   ├── db.png             # Diagrama de la base de datos
+│   ├── arquitectura_admin_cafeteria_cafe.png
 │   └── capturas/          # Capturas de la aplicación (ver sección «Capturas»)
 ├── tests/
 │   └── test_crud.py       # Pruebas automáticas
