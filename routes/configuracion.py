@@ -6,34 +6,36 @@ from db import DatabaseError, error_message, execute, query
 bp = Blueprint("configuracion", __name__, url_prefix="/configuracion")
 
 
-# --- FUNCIONES DE VALIDACIÓN ---
-
 def _leer_formulario_categoria(form):
     errores = []
+    
+    nombre = v.texto(form, "nombre_categoria", "Nombre de la categoría", errores, max_len=100)
+    
     datos = {
-        # Asumo 100 caracteres de máximo, ajusta si tu BD tiene otro límite
-        "nombre_categoria": v.texto(form, "nombre_categoria", "Nombre de la categoría", errores, max_len=100)
+        "nombre_categoria": nombre.upper() if nombre else nombre
     }
+    
     return datos, errores
-
 
 def _leer_formulario_tipo_doc(form):
     errores = []
+    
+    sigla = v.texto(form, "sigla", "Sigla", errores, max_len=5)
+    descripcion = v.texto(form, "descripcion", "Descripción", errores, max_len=50)
+    
     datos = {
-        "sigla": v.texto(form, "sigla", "Sigla", errores, max_len=5),
-        "descripcion": v.texto(form, "descripcion", "Descripción", errores, max_len=50),
+        "sigla": sigla.upper() if sigla else sigla,
+        "descripcion": descripcion
     }
     
-    # Si la sigla pasó la validación de texto (no está vacía), la pasamos a mayúsculas
-    if datos["sigla"]:
-        datos["sigla"] = datos["sigla"].upper()
-        
     return datos, errores
 
+def _render_form_categorias(item, titulo):
+    return render_template("configuracion/categoria_form.html", item=item, titulo=titulo)
 
-# --- RUTAS PRINCIPALES ---
-
-# 1. LISTAR
+def _render_form_tipo_doc(item, titulo):
+    return render_template("configuracion/form.html", item=item, titulo=titulo)  
+      
 @bp.route("/")
 def listar():
     items = query("""
@@ -59,9 +61,6 @@ def listar():
 
     return render_template("configuracion/list.html", items=items, categorias=categorias)
 
-
-# --- RUTAS PARA CATEGORÍA (/configuracion/categoria/...) ---
-
 @bp.route("/categoria/", methods=["GET", "POST"])
 @bp.route("/categoria/crear", methods=["GET", "POST"])
 def categoria_crear():
@@ -84,7 +83,7 @@ def categoria_crear():
         for e in errores:
             flash(e, "danger")
 
-    return render_template("configuracion/categoria_form.html", item=item if item else None)
+    return _render_form_categorias(item, "Nueva categoría")
 
 
 @bp.route("/categoria/editar/<int:id>", methods=["GET", "POST"])
@@ -115,7 +114,7 @@ def categoria_editar(id):
         for e in errores:
             flash(e, "danger")
 
-    return render_template("configuracion/categoria_form.html", item=item)
+    return _render_form_categorias(item, "Editar Categoría")
 
 
 @bp.route("/categoria/eliminar/<int:id>", methods=["POST"])
@@ -127,9 +126,6 @@ def categoria_eliminar(id):
         flash(error_message(e), "danger")
 
     return redirect(url_for("configuracion.listar"))
-
-
-# --- RUTAS PARA TIPO DE DOCUMENTO ---
 
 @bp.route("/nuevo", methods=["GET", "POST"])
 def nuevo():
@@ -152,7 +148,7 @@ def nuevo():
         for e in errores:
             flash(e, "danger")
 
-    return render_template("configuracion/form.html", item=item if item else None)
+    return _render_form_tipo_doc(item, "Nuevo Tipo de documento")
 
 
 @bp.route("/editar/<int:id>", methods=["GET", "POST"])
@@ -187,7 +183,7 @@ def editar(id):
         for e in errores:
             flash(e, "danger")
 
-    return render_template("configuracion/form.html", item=item)
+    return _render_form_tipo_doc(item, "Editar Tipo de documento")
 
 
 @bp.route("/eliminar/<int:id>", methods=["POST"])
